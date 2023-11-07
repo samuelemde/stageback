@@ -5,7 +5,6 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { posts } from "~/server/db/schema";
 
 export const postRouter = createTRPCRouter({
   hello: publicProcedure
@@ -22,15 +21,18 @@ export const postRouter = createTRPCRouter({
       // simulate a slow db call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      await ctx.db.insert(posts).values({
-        name: input.name,
-        createdById: ctx.session.user.id,
+      await ctx.db.post.create({
+        data: {
+          name: input.name,
+          createdById: ctx.session.user.id,
+        },
       });
     }),
 
-  getLatest: publicProcedure.query(({ ctx }) => {
-    return ctx.db.query.posts.findFirst({
-      orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+  getLatest: protectedProcedure.query(({ ctx }) => {
+    return ctx.db.post.findFirst({
+      orderBy: { createdAt: "desc" },
+      where: { createdBy: { id: ctx.session.user.id } },
     });
   }),
 
