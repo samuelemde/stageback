@@ -1,6 +1,11 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+generator zod {
+  provider          = "zod-prisma-types"
+  useTypeAssertions = true
+}
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,14 +19,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
+model Team {
   id        Int      @id @default(autoincrement())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  createdBy   User   @relation(fields: [createdById], references: [id])
-  createdById String
+  members User[]
+
+  @@index([name])
+}
+
+model Title {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  fileName  String
+  title     String
+  artist    String
+  trackNo   Int?
+  trackOf   Int?
+  url       String
+  size      BigInt
+  duration  Int
+  createdAt DateTime @default(now())
+
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+  uploadedById String
+
+  @@index([title])
+}
+
+model Image {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  name      String
+  url       String
+  size      BigInt
+  createdAt DateTime @default(now())
+
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+  uploadedById String
 
   @@index([name])
 }
@@ -61,7 +98,10 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  posts         Post[]
+  Title         Title[]
+  Team          Team?     @relation(fields: [teamId], references: [id])
+  teamId        Int?
+  Image         Image[]
 }
 
 model VerificationToken {
