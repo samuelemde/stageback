@@ -1,5 +1,4 @@
 import { api } from "~/trpc/server";
-import { columns } from "~/app/(library)/audio/columns";
 import PageContent from "~/components/page-content";
 import { AudioTable } from "~/app/(library)/audio/audio-table";
 
@@ -10,7 +9,7 @@ export default async function AudioListPage() {
 
   return (
     <PageContent className="gap-10 p-10">
-      <AudioTable columns={columns} titles={titles} />
+      <AudioTable titles={titles} />
     </PageContent>
   );
 }
