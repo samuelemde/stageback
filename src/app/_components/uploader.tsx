@@ -1,6 +1,6 @@
 "use client";
 
-import { UploadButton } from "~/lib/uploadthing";
+import { UploadButton, UploadDropzone } from "~/lib/uploadthing";
 import { useToast } from "~/components/ui/use-toast";
 import { ToastAction } from "~/components/ui/toast";
 import { api } from "~/trpc/react";
@@ -23,7 +23,7 @@ export default function Uploader({ endpoint }: UploaderProps) {
   });
 
   return (
-    <UploadButton
+    <UploadDropzone
       endpoint={endpoint}
       onClientUploadComplete={async (res) => {
         if (!res?.[0] || !session.data?.user.id) return;

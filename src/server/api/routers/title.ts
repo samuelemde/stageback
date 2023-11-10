@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { TitleUncheckedCreateInputSchema } from "../../../../prisma/generated/zod";
 
 export const titleRouter = createTRPCRouter({
@@ -25,5 +29,9 @@ export const titleRouter = createTRPCRouter({
     return ctx.db.title.findUnique({
       where: { id: input },
     });
+  }),
+
+  getPublic: publicProcedure.query(({ ctx }) => {
+    return ctx.db.title.findMany();
   }),
 });

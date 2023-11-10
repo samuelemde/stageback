@@ -75,11 +75,11 @@ const columns: ColumnDef<Title>[] = [
   },
 ];
 
-interface DataTableProps<TValue> {
+interface DataTableProps {
   titles: Title[];
 }
 
-export function AudioTable<TValue>({ titles }: DataTableProps<TValue>) {
+export function AudioTable({ titles }: DataTableProps) {
   const { setTempIds } = usePlayer();
 
   useEffect(() => {
