@@ -7,7 +7,6 @@ import { AudioTable } from "~/app/(library)/audio/audio-table";
 
 export default async function Home() {
   const session = await getServerAuthSession();
-  const greetings = await api.title.hello.query();
 
   return (
     <PageContent className="justify-center gap-y-4 p-10">
@@ -21,7 +20,6 @@ export default async function Home() {
         {session ? "Sign out" : "Sign in"}
       </Link>
       <Uploader endpoint={"audioUploader"} />
-      <div>{greetings}</div>
     </PageContent>
   );
 }

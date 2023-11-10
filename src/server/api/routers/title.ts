@@ -30,12 +30,4 @@ export const titleRouter = createTRPCRouter({
       where: { id: input },
     });
   }),
-
-  getPublic: publicProcedure.query(({ ctx }) => {
-    return ctx.db.title.findMany();
-  }),
-
-  hello: publicProcedure.query(() => {
-    return "Hello, world!";
-  }),
 });
