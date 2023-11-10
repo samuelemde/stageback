@@ -1,34 +1,72 @@
 "use client";
 
 import * as React from "react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PlayerButton from "~/components/player-button";
-import { AudioCtx } from "~/app/_providers/audio-provider";
-import { ImSpinner2 } from "react-icons/im";
-import { HiPause, HiPlay, HiVolumeOff, HiVolumeUp } from "react-icons/hi";
+import { HiVolumeOff, HiVolumeUp } from "react-icons/hi";
 import AudioProgressBar from "~/components/audio-progress-bar";
-import { formatDuration } from "~/lib/utils";
 import VolumeInput from "~/components/volume-input";
 import TitleScroller from "~/components/title-scroller";
+import { api } from "~/trpc/react";
+import PlayerControls from "~/components/player-controls";
+import { cn } from "~/lib/utils";
+import usePlayer from "~/app/_hooks/usePlayer";
 
 export default function AudioPlayer() {
-  const { currentTitle, isPlaying, togglePlayPause } = useContext(AudioCtx);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const { setIsPlaying, ...player } = usePlayer();
+  const { data: currentTitle } = api.title.getById.useQuery(player.id!, {
+    enabled: !!player.id,
+    keepPreviousData: true,
+  });
 
-  const [isReady, setIsReady] = useState(false);
-  const [currentProgress, setCurrentProgress] = React.useState(0);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [volume, setVolume] = useState(0.8);
   const [previousVolume, setPreviousVolume] = useState(0);
 
   useEffect(() => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        void audioRef.current.play();
-      } else {
-        audioRef.current.pause();
-      }
+    console.log("PLAYY", player.isPlaying, audioRef.current);
+    if (!audioRef.current) return;
+    if (player.isPlaying) {
+      void audioRef.current.play();
+    } else {
+      audioRef.current.pause();
     }
-  }, [isPlaying, currentTitle]);
+  }, [player.isPlaying]);
+
+  useEffect(() => {
+    if (!audioRef.current || !currentTitle) return;
+    audioRef.current.load();
+    if (player.isPlaying) {
+      void audioRef.current.play();
+    } else setIsPlaying(true);
+  }, [currentTitle?.id, setIsPlaying]);
+
+  // use space bar to play/pause
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === "Space") {
+        e.preventDefault();
+        player.togglePlay();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [player]);
+
+  // use media keys to play/pause
+  useEffect(() => {
+    // Check if mediaSession is supported
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.setActionHandler("play", () => setIsPlaying(true));
+      navigator.mediaSession.setActionHandler("pause", () =>
+        setIsPlaying(false),
+      );
+    }
+  }, [player]);
 
   const toggleMute = () => {
     if (!audioRef.current) return;
@@ -46,67 +84,36 @@ export default function AudioPlayer() {
     setVolume(volumeValue);
   };
 
-  if (!currentTitle) return null;
+  // if (!player.id || !currentTitle) return null;
 
   return (
-    <div className="bg-background text-background fixed inset-x-0 bottom-0 h-[70px] px-8 py-3">
-      {currentTitle && (
-        <audio
-          key={currentTitle.url}
-          ref={audioRef}
-          preload="metadata"
-          onCanPlay={(e) => {
-            e.currentTarget.volume = volume;
-            setIsReady(true);
-          }}
-          onEnded={() => togglePlayPause()}
-          onTimeUpdate={(e) => setCurrentProgress(e.currentTarget.currentTime)}
-        >
-          <source type="audio/mpeg" src={currentTitle.url} />
-        </audio>
+    <div
+      className={cn(
+        "bg-background text-background fixed inset-x-0 bottom-0 h-[70px] px-8 py-3",
+        { hidden: !currentTitle || !player.id },
       )}
+    >
+      <audio
+        ref={audioRef}
+        preload="metadata"
+        onCanPlay={(e) => (e.currentTarget.volume = volume)}
+        onEnded={() => setIsPlaying(false)}
+      >
+        <source type="audio/mpeg" src={currentTitle?.url ?? ""} />
+      </audio>
 
       <div className="flex items-center justify-between gap-8">
         <div className="flex w-1/6 flex-col">
-          <TitleScroller title={currentTitle.title} />
+          <TitleScroller title={currentTitle?.title} />
           <div className="text-foreground text-xs font-light">
-            {currentTitle.artist}
+            {currentTitle?.artist}
           </div>
         </div>
-        <PlayerButton
-          disabled={!isReady}
-          onClick={togglePlayPause}
-          aria-label={isPlaying ? "Pause" : "Play"}
-          size="icon"
-          variant="icon"
-        >
-          {!isReady ? (
-            <ImSpinner2 size={24} className="animate-spin" />
-          ) : isPlaying ? (
-            <HiPause size={40} />
-          ) : (
-            <HiPlay size={40} />
-          )}
-        </PlayerButton>
-        <div className="flex flex-grow gap-2">
-          <p className="text-foreground w-8 text-right text-xs font-light">
-            {formatDuration(currentProgress)}
-          </p>
-          <div className="relative flex flex-grow">
-            <AudioProgressBar
-              duration={currentTitle.duration}
-              currentProgress={currentProgress}
-              onValueChange={(value) => {
-                if (!audioRef.current) return;
-                audioRef.current.currentTime = value[0]!;
-                setCurrentProgress(value[0]!);
-              }}
-            />
-          </div>
-          <p className="text-foreground w-8 text-xs font-light">
-            {formatDuration(currentTitle.duration)}
-          </p>
-        </div>
+        <PlayerControls audioRef={audioRef} />
+        <AudioProgressBar
+          audioRef={audioRef}
+          duration={currentTitle?.duration}
+        />
         <div className="flex items-center justify-self-end">
           <PlayerButton
             variant="icon"

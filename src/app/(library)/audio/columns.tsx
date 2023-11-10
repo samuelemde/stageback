@@ -11,38 +11,15 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Button } from "~/components/ui/button";
 import { LuMoreHorizontal } from "react-icons/lu";
-import { HiPause, HiPlay } from "react-icons/hi2";
 import { formatDuration } from "~/lib/utils";
-import React, { useContext } from "react";
-import { AudioCtx } from "~/app/_providers/audio-provider";
+import React from "react";
 import Link from "next/link";
+import PlayButton from "~/components/play-button";
 
 export const columns: ColumnDef<Title>[] = [
   {
     id: "playButton",
-    cell: ({ table, row }) => {
-      const { isPlaying, setCurrentTitle, currentTitle, togglePlayPause } =
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useContext(AudioCtx);
-
-      const isDifferentTitle = currentTitle !== row.original;
-      const shouldTogglePlay = !isPlaying || !isDifferentTitle;
-
-      function onClick() {
-        if (isDifferentTitle) setCurrentTitle(row.original);
-        if (shouldTogglePlay) togglePlayPause();
-        if (!row.getIsSelected()) {
-          table.toggleAllPageRowsSelected(false);
-        }
-        row.toggleSelected(!row.getIsSelected());
-      }
-
-      return row.getIsSelected() && isPlaying ? (
-        <HiPause size={20} onClick={onClick} className="ml-2 cursor-pointer" />
-      ) : (
-        <HiPlay size={20} onClick={onClick} className="ml-2 cursor-pointer" />
-      );
-    },
+    cell: ({ row }) => <PlayButton id={row.original.id} />,
   },
   {
     header: "Title",

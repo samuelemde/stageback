@@ -1,20 +1,16 @@
-"use client";
-
-import { api } from "~/trpc/react";
-import { DataTable } from "~/app/(library)/audio/data-table";
+import { api } from "~/trpc/server";
 import { columns } from "~/app/(library)/audio/columns";
-import Uploader from "~/components/uploader";
 import PageContent from "~/components/page-content";
+import { AudioTable } from "~/app/(library)/audio/audio-table";
 
-export default function AudioListPage() {
-  const { data: titles } = api.title.getAll.useQuery();
+export const dynamic = "force-dynamic";
 
-  if (!titles) return null;
+export default async function AudioListPage() {
+  const titles = await api.title.getAll.query();
 
   return (
     <PageContent className="gap-10 p-10">
-      <DataTable columns={columns} data={titles} />
-      <Uploader endpoint={"audioUploader"} />
+      <AudioTable columns={columns} titles={titles} />
     </PageContent>
   );
 }

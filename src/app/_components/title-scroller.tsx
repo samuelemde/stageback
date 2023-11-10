@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 import { motion, useAnimation } from "framer-motion";
+import { Skeleton } from "~/components/ui/skeleton";
 
 type TitleScrollerProps = {
-  title: string;
+  title?: string;
 };
 
 export default function TitleScroller({ title }: TitleScrollerProps) {
@@ -41,6 +42,8 @@ export default function TitleScroller({ title }: TitleScrollerProps) {
 
     return () => window.removeEventListener("resize", calculateAndRunAnimation);
   }, [title, controls]);
+
+  if (!title) return <Skeleton />;
 
   return (
     <div className="overflow-hidden whitespace-nowrap" ref={titleRef}>

@@ -15,20 +15,31 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import React from "react";
+import React, { useEffect } from "react";
 import { type Title } from ".prisma/client";
+import usePlayer from "~/app/_hooks/usePlayer";
 
 interface DataTableProps<TValue> {
   columns: ColumnDef<Title, TValue>[];
-  data: Title[];
+  titles: Title[];
 }
 
-export function DataTable<TValue>({ columns, data }: DataTableProps<TValue>) {
+export function AudioTable<TValue>({
+  columns,
+  titles,
+}: DataTableProps<TValue>) {
+  const { setTempIds } = usePlayer();
+
+  useEffect(() => {
+    setTempIds(titles.map((title) => title.id));
+  }, [setTempIds, titles]);
+
   const table = useReactTable({
-    data,
+    data: titles,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
   return (
     <div className="w-full rounded-md">
       <Table>

@@ -6,18 +6,17 @@ import { HiCollection } from "react-icons/hi";
 import SidebarItem from "~/components/sidebar-item";
 import { RiHomeLine, RiSearchLine } from "react-icons/ri";
 import { HiOutlinePlay } from "react-icons/hi2";
-import { AudioCtx } from "~/app/_providers/audio-provider";
-import { useContext } from "react";
+import usePlayer from "~/app/_hooks/usePlayer";
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function Sidebar({ className, children }: SidebarProps) {
-  const { currentTitle } = useContext(AudioCtx);
+  const { id } = usePlayer();
 
   return (
     <div
       className={cn("bg-background flex h-full", className, {
-        "h-[calc(100%-60px)]": !!currentTitle,
+        "h-[calc(100%-60px)]": !!id,
       })}
     >
       <div className="bg-background hidden w-[250px] flex-col gap-2.5 p-2.5 md:flex">

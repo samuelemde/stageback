@@ -1,13 +1,12 @@
 import "@uploadthing/react/styles.css";
 import "~/styles/globals.css";
 
-import { GeistMono, GeistSans } from "geist/font";
+import { GeistSans } from "geist/font";
 import { cookies } from "next/headers";
 import { TRPCReactProvider } from "~/trpc/react";
 import { Toaster } from "~/components/ui/toaster";
 import { Sidebar } from "~/components/sidebar";
 import AudioPlayer from "~/components/audio-player";
-import AudioProvider from "./_providers/audio-provider";
 import NextAuthProvider from "~/app/_providers/auth-provider";
 
 export const metadata = {
@@ -23,13 +22,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+      <body className={`font-sans ${GeistSans.variable}`}>
         <TRPCReactProvider cookies={cookies().toString()}>
           <NextAuthProvider>
-            <AudioProvider>
-              <Sidebar>{children}</Sidebar>
-              <AudioPlayer />
-            </AudioProvider>
+            <Sidebar>{children}</Sidebar>
+            <AudioPlayer />
           </NextAuthProvider>
         </TRPCReactProvider>
         <Toaster />

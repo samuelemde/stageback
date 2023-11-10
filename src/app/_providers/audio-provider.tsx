@@ -1,44 +1,76 @@
 "use client";
 
-import { createContext, useState } from "react";
-import { type Title } from ".prisma/client";
+import React, { createContext, useRef, useState } from "react";
 
-type AudioContext = {
+type Ids = { active: string[]; temp: string[] };
+
+type AudioCtxType = {
+  audioRef: React.RefObject<HTMLAudioElement>;
+  id?: string;
+  ids: Ids;
+  setId: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setIds: React.Dispatch<React.SetStateAction<Ids>>;
+  updateIds: () => void;
+  reset: () => void;
   isPlaying: boolean;
-  togglePlayPause: () => void;
-  currentTitle?: Title;
-  setCurrentTitle: React.Dispatch<React.SetStateAction<Title | undefined>>;
+  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+  togglePlay: () => void;
 };
 
-export const AudioCtx = createContext<AudioContext>({
-  isPlaying: false,
-  togglePlayPause: () => {
-    throw new Error("togglePlayPause function must be overridden by provider");
+export const AudioCtx = createContext<AudioCtxType>({
+  audioRef: { current: null },
+  id: undefined,
+  ids: { active: [], temp: [] },
+  setId: () => {
+    throw new Error("load function must be overridden by provider");
   },
-  currentTitle: undefined,
-  setCurrentTitle: () => {
-    throw new Error("setCurrentSong function must be overridden by provider");
+  setIds: () => {
+    throw new Error("setIds function must be overridden by provider");
+  },
+  updateIds: () => {
+    throw new Error("updateIds function must be overridden by provider");
+  },
+  reset: () => {
+    throw new Error("reset function must be overridden by provider");
+  },
+  isPlaying: false,
+  setIsPlaying: () => {
+    throw new Error("setIsPlaying function must be overridden by provider");
+  },
+  togglePlay: () => {
+    throw new Error("togglePlay function must be overridden by provider");
   },
 });
 
-export default function ThemeProvider({
+export default function AudioProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [currentTitle, setCurrentTitle] = useState<Title | undefined>(
-    undefined,
-  );
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [id, setId] = useState<string | undefined>(undefined);
+  const [ids, setIds] = useState<Ids>({ active: [], temp: [] });
   const [isPlaying, setIsPlaying] = useState(false);
+  const updateIds = () => setIds((state) => ({ active: state.temp, temp: [] }));
+  const reset = () => {
+    setId(undefined);
+    setIds({ active: [], temp: [] });
+  };
   const togglePlayPause = () => setIsPlaying((prevIsPlaying) => !prevIsPlaying);
 
   return (
     <AudioCtx.Provider
       value={{
+        audioRef,
+        id,
+        ids,
+        setId,
+        setIds,
+        updateIds,
+        reset,
         isPlaying,
-        togglePlayPause,
-        currentTitle,
-        setCurrentTitle,
+        setIsPlaying,
+        togglePlay: togglePlayPause,
       }}
     >
       {children}
