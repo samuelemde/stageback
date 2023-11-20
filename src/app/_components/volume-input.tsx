@@ -11,7 +11,7 @@ export default function VolumeInput({
   onVolumeChange,
 }: VolumeInputProps) {
   return (
-    <div className="group flex w-[80px]">
+    <div className="group flex w-[90px]">
       <Slider
         className="hidden group-hover:flex"
         name="volume"

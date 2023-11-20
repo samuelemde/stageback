@@ -7,6 +7,7 @@ import { useState } from "react";
 
 import { type AppRouter } from "~/server/api/root";
 import { getUrl, transformer } from "./shared";
+import superjson from "superjson";
 
 export const api = createTRPCReact<AppRouter>();
 
@@ -14,7 +15,12 @@ export function TRPCReactProvider(props: {
   children: React.ReactNode;
   cookies: string;
 }) {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: { queries: { queryKeyHashFn: superjson.stringify } },
+      }),
+  );
 
   const [trpcClient] = useState(() =>
     api.createClient({
@@ -35,7 +41,7 @@ export function TRPCReactProvider(props: {
           },
         }),
       ],
-    })
+    }),
   );
 
   return (

@@ -8,6 +8,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { type Team } from ".prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -19,9 +20,9 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      // ...other properties
-      // role: UserRole;
+      teams: Team[];
     } & DefaultSession["user"];
+    activeTeam: Team;
   }
 
   // interface User {
@@ -37,13 +38,23 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session: async ({ session, user }) => {
+      const userTeams = await db.user.findUnique({
+        where: { id: user.id },
+        select: {
+          teams: true, // Assuming a relation is set up in Prisma schema
+        },
+      });
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: user.id,
+          teams: userTeams?.teams ?? [],
+        },
+        activeTeam: userTeams?.teams[0] ?? null,
+      };
+    },
   },
   adapter: PrismaAdapter(db),
   providers: [

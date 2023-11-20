@@ -1,15 +1,16 @@
 import { api } from "~/trpc/server";
+import { SongsPage } from "~/app/(library)/audio/songs-page";
 import PageContent from "~/components/page-content";
-import { AudioTable } from "~/app/(library)/audio/audio-table";
 
-export const dynamic = "force-dynamic";
-
-export default async function AudioListPage() {
-  const titles = await api.title.getAll.query();
+export default async function Page() {
+  const [all, masters] = await Promise.all([
+    api.song.getAll.query(),
+    api.song.getAllMasters.query(),
+  ]);
 
   return (
-    <PageContent className="gap-10 p-10">
-      <AudioTable titles={titles} />
+    <PageContent className="gap-10">
+      <SongsPage allSongs={all} masterVersions={masters} />
     </PageContent>
   );
 }

@@ -2,8 +2,13 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator zod {
-  provider          = "zod-prisma-types"
-  useTypeAssertions = true
+  provider                  = "zod-prisma-types"
+  useTypeAssertions         = true
+  createRelationValuesTypes = true
+  addIncludeType            = false
+  addSelectType             = false
+  // validateWhereUniqueInput  = true
+  // writeNullishInModelTypes  = true
 }
 
 generator client {
@@ -21,45 +26,92 @@ datasource db {
 }
 
 model Team {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  members User[]
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  members     User[]   @relation("TeamMembers")
+  songs       Song[]
+  createdBy   User     @relation("Creator", fields: [createdById], references: [id])
+  createdById String
 
   @@index([name])
 }
 
-model Title {
-  id        String   @id @default(cuid())
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  teams         Team[]    @relation("TeamMembers")
+  createdTeams  Team[]    @relation("Creator")
+  Song          Song[]
+  Image         Image[]
+}
+
+model Song {
+  id        BigInt   @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   key       String   @unique
   fileName  String
   title     String
   artist    String
+  url       String
   trackNo   Int?
   trackOf   Int?
-  url       String
   size      BigInt
   duration  Int
-  createdAt DateTime @default(now())
+  lyrics    String?
+  metadata  Json?
 
-  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+  artwork      Image?       @relation(fields: [artworkId], references: [id])
+  artworkId    BigInt?
+  collections  Collection[]
+  versionOfId  BigInt?      @map("versionOf")
+  versionOf    Song?        @relation("SongVersion", fields: [versionOfId], references: [id])
+  versions     Song[]       @relation("SongVersion")
+  team         Team         @relation(fields: [teamId], references: [id])
+  teamId       Int
+  uploadedBy   User         @relation(fields: [uploadedById], references: [id])
   uploadedById String
+  album        Album?       @relation(fields: [albumId], references: [id])
+  albumId      BigInt?
 
   @@index([title])
 }
 
+model Album {
+  id        BigInt   @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  songs     Song[]
+}
+
+model Collection {
+  id        BigInt   @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  songs     Song[]
+}
+
 model Image {
-  id        String   @id @default(cuid())
+  id        BigInt   @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   key       String   @unique
   name      String
   url       String
   size      BigInt
-  createdAt DateTime @default(now())
 
   uploadedBy   User   @relation(fields: [uploadedById], references: [id])
   uploadedById String
+  Song         Song[]
 
   @@index([name])
 }
@@ -89,20 +141,6 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  Title         Title[]
-  Team          Team?     @relation(fields: [teamId], references: [id])
-  teamId        Int?
-  Image         Image[]
 }
 
 model VerificationToken {

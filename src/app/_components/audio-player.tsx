@@ -7,39 +7,29 @@ import { HiVolumeOff, HiVolumeUp } from "react-icons/hi";
 import AudioProgressBar from "~/components/audio-progress-bar";
 import VolumeInput from "~/components/volume-input";
 import TitleScroller from "~/components/title-scroller";
-import { api } from "~/trpc/react";
 import PlayerControls from "~/components/player-controls";
-import { cn } from "~/lib/utils";
 import usePlayer from "~/app/_hooks/usePlayer";
+import { HiXMark } from "react-icons/hi2";
 
 export default function AudioPlayer() {
-  const { setIsPlaying, ...player } = usePlayer();
-  const { data: currentTitle } = api.title.getById.useQuery(player.id!, {
-    enabled: !!player.id,
-    keepPreviousData: true,
-  });
-
+  const { activeSong, ...player } = usePlayer();
   const audioRef = useRef<HTMLAudioElement>(null);
   const [volume, setVolume] = useState(0.8);
   const [previousVolume, setPreviousVolume] = useState(0);
 
+  // load new track
   useEffect(() => {
-    console.log("PLAYY", player.isPlaying, audioRef.current);
-    if (!audioRef.current) return;
-    if (player.isPlaying) {
-      void audioRef.current.play();
-    } else {
-      audioRef.current.pause();
-    }
-  }, [player.isPlaying]);
-
-  useEffect(() => {
-    if (!audioRef.current || !currentTitle) return;
+    if (!audioRef.current || !activeSong) return;
     audioRef.current.load();
-    if (player.isPlaying) {
-      void audioRef.current.play();
-    } else setIsPlaying(true);
-  }, [currentTitle?.id, setIsPlaying]);
+    void audioRef.current.play();
+    player.setIsPlaying(true);
+  }, [activeSong]);
+
+  // handle play/pause
+  useEffect(() => {
+    if (!audioRef.current) return;
+    player.isPlaying ? void audioRef.current.play() : audioRef.current.pause();
+  }, [player.isPlaying]);
 
   // use space bar to play/pause
   useEffect(() => {
@@ -55,18 +45,25 @@ export default function AudioPlayer() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [player]);
+  }, [player.togglePlay]);
 
   // use media keys to play/pause
   useEffect(() => {
     // Check if mediaSession is supported
     if ("mediaSession" in navigator) {
-      navigator.mediaSession.setActionHandler("play", () => setIsPlaying(true));
+      navigator.mediaSession.setActionHandler("play", () =>
+        player.setIsPlaying(true),
+      );
       navigator.mediaSession.setActionHandler("pause", () =>
-        setIsPlaying(false),
+        player.setIsPlaying(false),
       );
     }
-  }, [player]);
+  }, [player.setIsPlaying]);
+
+  const handleVolumeChange = (value: number) => {
+    setVolume(value);
+    if (audioRef.current) audioRef.current.volume = value;
+  };
 
   const toggleMute = () => {
     if (!audioRef.current) return;
@@ -78,42 +75,29 @@ export default function AudioPlayer() {
     }
   };
 
-  const handleVolumeChange = (volumeValue: number) => {
-    if (!audioRef.current) return;
-    audioRef.current.volume = volumeValue;
-    setVolume(volumeValue);
-  };
-
-  // if (!player.id || !currentTitle) return null;
+  if (!activeSong) return null;
 
   return (
-    <div
-      className={cn(
-        "bg-background text-background fixed inset-x-0 bottom-0 h-[70px] px-8 py-3",
-        { hidden: !currentTitle || !player.id },
-      )}
-    >
+    <div className="fixed inset-x-0 bottom-0 h-[70px] bg-background px-8 py-3 text-background">
       <audio
         ref={audioRef}
         preload="metadata"
         onCanPlay={(e) => (e.currentTarget.volume = volume)}
-        onEnded={() => setIsPlaying(false)}
+        onEnded={() => player.setIsPlaying(false)}
       >
-        <source type="audio/mpeg" src={currentTitle?.url ?? ""} />
+        <source key={activeSong.id} type="audio/mpeg" src={activeSong.url} />
+        Audio not supported
       </audio>
 
       <div className="flex items-center justify-between gap-8">
         <div className="flex w-1/6 flex-col">
-          <TitleScroller title={currentTitle?.title} />
-          <div className="text-foreground text-xs font-light">
-            {currentTitle?.artist}
+          <TitleScroller title={activeSong.title} />
+          <div className="text-xs font-light text-foreground">
+            {activeSong.artist}
           </div>
         </div>
         <PlayerControls audioRef={audioRef} />
-        <AudioProgressBar
-          audioRef={audioRef}
-          duration={currentTitle?.duration}
-        />
+        <AudioProgressBar audioRef={audioRef} duration={activeSong.duration} />
         <div className="flex items-center justify-self-end">
           <PlayerButton
             variant="icon"
@@ -129,6 +113,14 @@ export default function AudioPlayer() {
           </PlayerButton>
           <VolumeInput volume={volume} onVolumeChange={handleVolumeChange} />
         </div>
+        <PlayerButton
+          className="p-0"
+          variant="icon"
+          aria-label="close player"
+          onClick={() => player.setActiveSong(undefined)}
+        >
+          <HiXMark size={16} />
+        </PlayerButton>
       </div>
     </div>
   );

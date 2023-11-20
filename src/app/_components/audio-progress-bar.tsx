@@ -6,7 +6,7 @@ import { type RefObject, useEffect, useState } from "react";
 
 interface AudioProgressBarProps extends React.ComponentProps<typeof Slider> {
   audioRef: RefObject<HTMLAudioElement>;
-  duration?: number;
+  duration: number;
 }
 
 export default function AudioProgressBar({
@@ -54,7 +54,7 @@ export default function AudioProgressBar({
           <Progress
             className="text-background m-auto flex h-1 group-hover:hidden"
             max={duration}
-            value={(100 / (duration ?? 0)) * currentProgress}
+            value={(100 / duration) * currentProgress}
           />
         </div>
       </div>

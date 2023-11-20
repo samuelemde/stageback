@@ -1,12 +1,13 @@
 import { create } from "zustand";
+import { type Song } from ".prisma/client";
 
 interface PlayerStore {
-  id?: string;
-  ids: string[];
-  tempIds: string[];
-  setId: (id: string) => void;
-  setIds: (ids: string[]) => void;
-  setTempIds: (ids: string[]) => void;
+  activeSong?: Song;
+  ids: bigint[];
+  tempIds: bigint[];
+  setActiveSong: (track: Song | undefined) => void;
+  setIds: (ids: bigint[]) => void;
+  setTempIds: (ids: bigint[]) => void;
   updateIds: () => void;
   reset: () => void;
   isPlaying: boolean;
@@ -15,14 +16,14 @@ interface PlayerStore {
 }
 
 const usePlayer = create<PlayerStore>((set) => ({
+  activeSong: undefined,
   ids: [],
   tempIds: [],
-  id: undefined,
-  setId: (id) => set({ id: id }),
+  setActiveSong: (track) => set({ activeSong: track }),
   setIds: (ids) => set({ ids }),
   setTempIds: (ids) => set({ tempIds: ids }),
   updateIds: () => set((state) => ({ ids: state.tempIds, tempIds: [] })),
-  reset: () => set({ ids: [], id: undefined }),
+  reset: () => set({ ids: [], activeSong: undefined }),
   isPlaying: false,
   setIsPlaying: (value) => set({ isPlaying: value }),
   togglePlay: () => set((state) => ({ isPlaying: !state.isPlaying })),

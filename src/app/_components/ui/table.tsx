@@ -58,7 +58,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "hover:text-accent-foreground data-[state=selected]:bg-accent hover:bg-accent cursor-default transition-colors [&_td:first-child]:rounded-l-md [&_td:last-child]:rounded-r-md",
+      "hover:text-accent-foreground data-[state=selected]:bg-accent hover:bg-muted cursor-default transition-colors [&_td:first-child]:rounded-l-md [&_td:last-child]:rounded-r-md",
       className,
     )}
     {...props}
@@ -88,7 +88,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      "[] p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      "p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
       className,
     )}
     {...props}
