@@ -2,10 +2,10 @@
 
 import { ImSpinner2 } from "react-icons/im";
 import { HiPause, HiPlay } from "react-icons/hi";
-import PlayerButton from "~/components/player-button";
 import * as React from "react";
 import { type RefObject, useEffect, useState } from "react";
 import usePlayer from "~/app/_hooks/usePlayer";
+import { Button } from "~/components/ui/button";
 
 type PlayerControlsProps = { audioRef: RefObject<HTMLAudioElement> };
 
@@ -26,28 +26,27 @@ export default function PlayerControls({ audioRef }: PlayerControlsProps) {
 
     const handleLoadStart = () => {
       loadStartTimeout = setTimeout(() => {
-        setIsReady(true);
+        setIsReady(false);
       }, 200);
-      setIsReady(false);
     };
 
-    audioElement.addEventListener("canplay", handleCanPlay);
+    audioElement.addEventListener("canplaythrough", handleCanPlay);
     audioElement.addEventListener("loadstart", handleLoadStart);
 
     return () => {
-      audioElement.removeEventListener("canplay", handleCanPlay);
+      audioElement.removeEventListener("canplaythrough", handleCanPlay);
       audioElement.removeEventListener("loadstart", handleLoadStart);
     };
   }, [audioRef]);
 
   return (
     <div>
-      <PlayerButton
+      <Button
         disabled={!isReady}
         onClick={player.togglePlay}
         aria-label={player.isPlaying ? "Pause" : "Play"}
         size="icon"
-        variant="icon"
+        variant="player"
       >
         {!isReady ? (
           <ImSpinner2 className="h-full w-full animate-spin p-1" />
@@ -56,7 +55,7 @@ export default function PlayerControls({ audioRef }: PlayerControlsProps) {
         ) : (
           <HiPlay className="h-full w-full" />
         )}
-      </PlayerButton>
+      </Button>
     </div>
   );
 }

@@ -26,7 +26,7 @@ datasource db {
 }
 
 model Team {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   name        String
@@ -53,7 +53,7 @@ model User {
 }
 
 model Song {
-  id        BigInt   @id @default(autoincrement())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   key       String   @unique
@@ -69,31 +69,31 @@ model Song {
   metadata  Json?
 
   artwork      Image?       @relation(fields: [artworkId], references: [id])
-  artworkId    BigInt?
+  artworkId    String?
   collections  Collection[]
-  versionOfId  BigInt?      @map("versionOf")
+  versionOfId  String?      @map("versionOf")
   versionOf    Song?        @relation("SongVersion", fields: [versionOfId], references: [id])
   versions     Song[]       @relation("SongVersion")
   team         Team         @relation(fields: [teamId], references: [id])
-  teamId       Int
+  teamId       String
   uploadedBy   User         @relation(fields: [uploadedById], references: [id])
   uploadedById String
   album        Album?       @relation(fields: [albumId], references: [id])
-  albumId      BigInt?
+  albumId      String?
 
   @@index([title])
 }
 
 model Album {
-  id        BigInt   @id @default(autoincrement())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String
+  name      String   @unique
   songs     Song[]
 }
 
 model Collection {
-  id        BigInt   @id @default(autoincrement())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
@@ -101,7 +101,7 @@ model Collection {
 }
 
 model Image {
-  id        BigInt   @id @default(autoincrement())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   key       String   @unique

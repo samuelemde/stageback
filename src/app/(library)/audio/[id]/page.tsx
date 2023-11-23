@@ -7,14 +7,13 @@ export default async function AudioPage({
 }: {
   params: { id: string };
 }) {
-  const id = BigInt(params.id);
-  const song = await api.song.getById.query(id);
+  const song = await api.song.getById.query(params.id);
 
   if (!song) return <div>Track not found</div>;
 
   return (
     <PageContent>
-      <SongDetails id={id} initialSong={song} />
+      <SongDetails id={params.id} initialSong={song} />
     </PageContent>
   );
 }

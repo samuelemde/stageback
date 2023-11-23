@@ -20,6 +20,8 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         icon: "bg-transparent hover:scale-105",
+        player:
+          "cursor-default text-accent-foreground items-center justify-center rounded-full bg-transparent hover:scale-105 focus:outline-none disabled:opacity-60",
       },
       size: {
         default: "h-9 px-4 py-2",
@@ -27,6 +29,7 @@ const buttonVariants = cva(
         lg: "h-10 rounded-md px-8",
         icon: "h-10 w-10",
         smallIcon: "h-8 w-8",
+        largeIcon: "h-20 w-20",
       },
     },
     defaultVariants: {

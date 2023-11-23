@@ -3,11 +3,11 @@ import { type Song } from ".prisma/client";
 
 interface PlayerStore {
   activeSong?: Song;
-  ids: bigint[];
-  tempIds: bigint[];
+  ids: string[];
+  tempIds: string[];
   setActiveSong: (track: Song | undefined) => void;
-  setIds: (ids: bigint[]) => void;
-  setTempIds: (ids: bigint[]) => void;
+  setIds: (ids: string[]) => void;
+  setTempIds: (ids: string[]) => void;
   updateIds: () => void;
   reset: () => void;
   isPlaying: boolean;

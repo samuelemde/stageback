@@ -6,7 +6,6 @@ import { Button } from "~/components/ui/button";
 
 export default async function Home() {
   const session = await getServerAuthSession();
-  console.log(session);
 
   return (
     <PageContent className="justify-center gap-y-20 p-10">

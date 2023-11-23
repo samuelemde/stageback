@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
-import PlayerButton from "~/components/player-button";
 import { HiVolumeOff, HiVolumeUp } from "react-icons/hi";
 import AudioProgressBar from "~/components/audio-progress-bar";
 import VolumeInput from "~/components/volume-input";
@@ -10,6 +9,7 @@ import TitleScroller from "~/components/title-scroller";
 import PlayerControls from "~/components/player-controls";
 import usePlayer from "~/app/_hooks/usePlayer";
 import { HiXMark } from "react-icons/hi2";
+import { Button } from "~/components/ui/button";
 
 export default function AudioPlayer() {
   const { activeSong, ...player } = usePlayer();
@@ -81,7 +81,7 @@ export default function AudioPlayer() {
     <div className="fixed inset-x-0 bottom-0 h-[70px] bg-background px-8 py-3 text-background">
       <audio
         ref={audioRef}
-        preload="metadata"
+        preload="auto"
         onCanPlay={(e) => (e.currentTarget.volume = volume)}
         onEnded={() => player.setIsPlaying(false)}
       >
@@ -99,8 +99,8 @@ export default function AudioPlayer() {
         <PlayerControls audioRef={audioRef} />
         <AudioProgressBar audioRef={audioRef} duration={activeSong.duration} />
         <div className="flex items-center justify-self-end">
-          <PlayerButton
-            variant="icon"
+          <Button
+            variant="player"
             size="smallIcon"
             onClick={toggleMute}
             aria-label={volume === 0 ? "unmute" : "mute"}
@@ -110,17 +110,17 @@ export default function AudioPlayer() {
             ) : (
               <HiVolumeUp size={16} />
             )}
-          </PlayerButton>
+          </Button>
           <VolumeInput volume={volume} onVolumeChange={handleVolumeChange} />
         </div>
-        <PlayerButton
+        <Button
           className="p-0"
-          variant="icon"
+          variant="player"
           aria-label="close player"
           onClick={() => player.setActiveSong(undefined)}
         >
           <HiXMark size={16} />
-        </PlayerButton>
+        </Button>
       </div>
     </div>
   );

@@ -22,14 +22,14 @@ export const songRouter = createTRPCRouter({
     });
   }),
 
-  getAllMasters: protectedProcedure.query(({ ctx }) => {
+  getMainVersions: protectedProcedure.query(({ ctx }) => {
     return ctx.db.song.findMany({
       where: { teamId: ctx.session.activeTeam.id, versionOfId: null },
       include: { album: true },
     });
   }),
 
-  getById: protectedProcedure.input(z.bigint()).query(({ ctx, input }) => {
+  getById: protectedProcedure.input(z.string()).query(({ ctx, input }) => {
     return ctx.db.song.findUnique({
       where: { id: input },
       include: {
@@ -41,4 +41,13 @@ export const songRouter = createTRPCRouter({
       },
     });
   }),
+
+  connectVersion: protectedProcedure
+    .input(z.object({ id: z.string(), versionOfId: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.db.song.update({
+        where: { id: input.id },
+        data: { versionOfId: input.versionOfId },
+      });
+    }),
 });

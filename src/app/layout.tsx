@@ -4,7 +4,6 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font";
 import { cookies } from "next/headers";
 import { TRPCReactProvider } from "~/trpc/react";
-import { Toaster } from "~/components/ui/toaster";
 import { Sidebar } from "~/components/sidebar";
 import AudioPlayer from "~/components/audio-player";
 import NextAuthProvider from "~/app/_providers/auth-provider";
@@ -29,7 +28,6 @@ export default function RootLayout({
             <AudioPlayer />
           </NextAuthProvider>
         </TRPCReactProvider>
-        <Toaster />
       </body>
     </html>
   );

@@ -8,7 +8,7 @@ export default function PageContent({
   return (
     <div
       className={cn(
-        "bg-card flex w-full flex-col items-center overflow-auto rounded-md p-10",
+        "flex w-full flex-col items-center overflow-auto rounded-md bg-card p-10",
         className,
       )}
     >

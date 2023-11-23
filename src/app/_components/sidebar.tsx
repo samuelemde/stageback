@@ -14,6 +14,9 @@ import {
   HiQueueList,
 } from "react-icons/hi2";
 import usePlayer from "~/app/_hooks/usePlayer";
+import { Toaster } from "~/components/ui/toaster";
+import VersionConnector from "~/components/version-connecter";
+import React from "react";
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -35,7 +38,7 @@ export function Sidebar({ className, children }: SidebarProps) {
             <SidebarItem href="/" label="Home">
               <RiHomeLine size={18} />
             </SidebarItem>
-            <SidebarItem href="/" label="Search">
+            <SidebarItem href="/coming-soon" label="Search">
               <RiSearchLine size={18} />
             </SidebarItem>
           </CardContent>
@@ -48,10 +51,10 @@ export function Sidebar({ className, children }: SidebarProps) {
             <SidebarItem href="/audio" label="Songs">
               <HiMusicalNote size={18} />
             </SidebarItem>
-            <SidebarItem href="/audio" label="Albums">
+            <SidebarItem href="/coming-soon" label="Albums">
               <HiCollection size={18} />
             </SidebarItem>
-            <SidebarItem href="/" label="Collections">
+            <SidebarItem href="/coming-soon" label="Collections">
               <HiQueueList size={18} />
             </SidebarItem>
           </CardContent>
@@ -61,10 +64,10 @@ export function Sidebar({ className, children }: SidebarProps) {
             <CardTitle>Visuals</CardTitle>
           </CardHeader>
           <CardContent>
-            <SidebarItem href="/audio" label="Fotos">
+            <SidebarItem href="/coming-soon" label="Photos">
               <HiOutlineCamera size={18} />
             </SidebarItem>
-            <SidebarItem href="/audio" label="Videos">
+            <SidebarItem href="/coming-soon" label="Videos">
               <HiOutlineVideoCamera size={18} />
             </SidebarItem>
           </CardContent>
@@ -74,16 +77,18 @@ export function Sidebar({ className, children }: SidebarProps) {
             <CardTitle>Other</CardTitle>
           </CardHeader>
           <CardContent>
-            <SidebarItem href="/audio" label="Documents">
+            <SidebarItem href="/coming-soon" label="Documents">
               <HiDocumentDuplicate size={18} />
             </SidebarItem>
-            <SidebarItem href="/audio" label="Contracts">
+            <SidebarItem href="/coming-soon" label="Contracts">
               <HiDocumentCheck size={18} />
             </SidebarItem>
           </CardContent>
         </Card>
       </div>
       <main className="flex h-full flex-1 p-2.5 pl-0">{children}</main>
+      <Toaster />
+      <VersionConnector />
     </div>
   );
 }

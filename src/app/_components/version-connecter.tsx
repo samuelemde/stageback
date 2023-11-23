@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import {
   Dialog,
@@ -11,27 +11,47 @@ import {
 } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/react";
-import React from "react";
+import React, { useState } from "react";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import useVersionConnector from "~/app/_hooks/useVersionConnector";
+import { toast } from "~/components/ui/use-toast";
+import { HiCheckCircle } from "react-icons/hi2";
 
-type VersionConnectorProps = {
-  trigger: React.ReactNode;
-};
+export default function VersionConnector() {
+  const { isOpen, setIsOpen, song } = useVersionConnector();
+  const { data: mainVersions } = api.song.getMainVersions.useQuery();
 
-export default function VersionConnector({ trigger }: VersionConnectorProps) {
-  const { data: songs } = api.song.getAllMasters.useQuery();
+  const utils = api.useUtils();
+  const { mutate } = api.song.connectVersion.useMutation({
+    onSuccess: (song) => {
+      setIsOpen(false);
+      void utils.song.getMainVersions.invalidate();
+      toast({
+        title: "Version connected!",
+        description: `"${song.title}" is now a version of "${mainVersions?.find(
+          (s) => s.id === song.versionOfId,
+        )?.title}"`,
+        action: <HiCheckCircle size={32} className="text-green-200" />,
+      });
+    },
+  });
 
-  if (!songs) return null;
+  const [versionOfId, setVersionOfId] = useState<string | null>(
+    song?.versionOfId ?? null,
+  );
+
+  if (!mainVersions || !song) return null;
   return (
-    <Dialog>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button className="hidden">Open</Button>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Connect version</DialogTitle>
@@ -39,22 +59,28 @@ export default function VersionConnector({ trigger }: VersionConnectorProps) {
             Make this song a version of another song.
           </DialogDescription>
         </DialogHeader>
-        <Select>
+        <Select onValueChange={(id) => setVersionOfId(id)}>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select main" />
+            <SelectValue placeholder="Select main version" />
           </SelectTrigger>
           <SelectContent>
-            <SelectGroup>
-              {songs.map((song) => (
-                <SelectItem key={song.id} value={song.title}>
+            {mainVersions
+              .filter((s) => s.id !== song.id)
+              .map((song) => (
+                <SelectItem key={song.id} value={song.id.toString()}>
                   {song.title}
                 </SelectItem>
               ))}
-            </SelectGroup>
           </SelectContent>
         </Select>
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <Button
+            type="submit"
+            disabled={!versionOfId}
+            onClick={() => mutate({ id: song.id, versionOfId: versionOfId! })}
+          >
+            Save changes
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
