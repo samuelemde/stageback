@@ -33,7 +33,6 @@ export const songRouter = createTRPCRouter({
     return ctx.db.song.findUnique({
       where: { id: input },
       include: {
-        artwork: true,
         album: true,
         versions: true,
         uploadedBy: true,
@@ -44,9 +43,13 @@ export const songRouter = createTRPCRouter({
 
   connectVersion: protectedProcedure
     .input(z.object({ id: z.string(), versionOfId: z.string() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.db.song.update({
-        where: { id: input.id },
+    .mutation(async ({ ctx, input }) => {
+      const subVersions = await ctx.db.song.findMany({
+        where: { versionOfId: input.id },
+      });
+      const ids = [input.id, ...subVersions.map((v) => v.id)];
+      return ctx.db.song.updateMany({
+        where: { id: { in: ids } },
         data: { versionOfId: input.versionOfId },
       });
     }),

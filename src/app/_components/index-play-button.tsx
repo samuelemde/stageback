@@ -7,11 +7,13 @@ import { cn } from "~/lib/utils";
 import { type Song } from ".prisma/client";
 
 type PlayButtonProps = HTMLAttributes<HTMLDivElement> & {
+  index: number;
   song: Song;
   size?: number;
 };
 
-export default function PlayButton({
+export default function IndexPlayButton({
+  index,
   song,
   size = 20,
   className,
@@ -27,5 +29,13 @@ export default function PlayButton({
   }
   const Icon = isCurrentlyActive && player.isPlaying ? HiPause : HiPlay;
 
-  return <Icon size={size} onClick={onClick} className={cn("", className)} />;
+  return (
+    <div className={cn("flex justify-center", className)}>
+      {isCurrentlyActive ? (
+        <Icon size={size} onClick={onClick} />
+      ) : (
+        <div>{index}</div>
+      )}
+    </div>
+  );
 }

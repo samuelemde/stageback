@@ -34,3 +34,7 @@ export function formatDuration(duration: number) {
   const sec = Math.floor(duration - min * 60);
   return `${min}:${sec < 10 ? "0" + sec : sec}`;
 }
+
+export function formatYear(date: Date) {
+  return date.getFullYear();
+}

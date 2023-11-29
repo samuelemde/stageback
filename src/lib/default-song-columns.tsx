@@ -1,42 +1,49 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import { type SongWithAlbum } from "~/trpc/shared";
-import PlayButton from "~/components/play-button";
+import { type SongWithRelations } from "~/trpc/shared";
+import IndexPlayButton from "~/components/index-play-button";
 import Link from "next/link";
 import { formatDuration } from "~/lib/utils";
 import React from "react";
 import SongActions from "~/components/song-actions";
+import ImageWithFallback from "~/components/image-with-fallback";
+import SongTitle from "~/components/song-title";
 
-export const defaultSongColumns: ColumnDef<SongWithAlbum>[] = [
+export const defaultSongColumns: ColumnDef<SongWithRelations>[] = [
   {
-    id: "playButton",
+    id: "index",
     header: () => <div className="sr-only">Play button</div>,
-    size: 1,
-    minSize: 1,
-    maxSize: 1,
-    cell: ({ row }) => <PlayButton song={row.original} />,
+    size: 25,
+    accessorFn: (_, index) => index + 1,
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <IndexPlayButton song={row.original} index={row.getValue("index")} />
+      </div>
+    ),
+  },
+  {
+    id: "artwork",
+    header: () => <div className="sr-only">Artwork</div>,
+    size: 25,
+    cell: ({ row }) => (
+      <ImageWithFallback
+        src={row.original.artworkUrl ?? row.original.album?.artworkUrl}
+        alt={"artwork"}
+        width={40}
+        height={40}
+        className="rounded-sm"
+      />
+    ),
   },
   {
     header: "Title",
     accessorKey: "title",
     size: 100,
-    cell: ({ row }) => (
-      <div className="truncate">
-        <Link
-          className="hover:underline"
-          href={`/audio/${row.original.id}`}
-          onClick={(e) => e.stopPropagation()}
-          onDoubleClick={(e) => e.stopPropagation()}
-        >
-          {row.getValue("title")}
-        </Link>
-        <div className="text-xs text-foreground/60">{row.original.artist}</div>
-      </div>
-    ),
+    cell: ({ row }) => <SongTitle song={row.original} />,
   },
   {
     header: "Album",
     accessorKey: "album",
-    size: 60,
+    size: 100,
     cell: ({ row }) => {
       if (!row.original.albumId) return null;
       return (

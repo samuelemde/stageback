@@ -15,7 +15,6 @@ import {
 } from "react-icons/hi2";
 import usePlayer from "~/app/_hooks/usePlayer";
 import { Toaster } from "~/components/ui/toaster";
-import VersionConnector from "~/components/version-connecter";
 import React from "react";
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
@@ -48,10 +47,10 @@ export function Sidebar({ className, children }: SidebarProps) {
             <CardTitle>Audio</CardTitle>
           </CardHeader>
           <CardContent>
-            <SidebarItem href="/audio" label="Songs">
+            <SidebarItem href="/songs" label="Songs">
               <HiMusicalNote size={18} />
             </SidebarItem>
-            <SidebarItem href="/coming-soon" label="Albums">
+            <SidebarItem href="/albums" label="Albums">
               <HiCollection size={18} />
             </SidebarItem>
             <SidebarItem href="/coming-soon" label="Collections">
@@ -88,7 +87,6 @@ export function Sidebar({ className, children }: SidebarProps) {
       </div>
       <main className="flex h-full flex-1 p-2.5 pl-0">{children}</main>
       <Toaster />
-      <VersionConnector />
     </div>
   );
 }

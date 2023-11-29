@@ -30,4 +30,6 @@ export type RouterInputs = inferRouterInputs<AppRouter>;
  */
 export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
-export type SongWithAlbum = Prisma.SongGetPayload<{ include: { album: true } }>;
+export type SongWithRelations = Prisma.SongGetPayload<{
+  include: { album: true };
+}>;

@@ -1,6 +1,7 @@
 import { api } from "~/trpc/server";
 import PageContent from "~/components/page-content";
-import SongDetails from "~/app/(library)/audio/[id]/song-details";
+import SongDetails from "~/app/(library)/songs/[id]/song-details";
+import { notFound } from "next/navigation";
 
 export default async function AudioPage({
   params,
@@ -9,7 +10,7 @@ export default async function AudioPage({
 }) {
   const song = await api.song.getById.query(params.id);
 
-  if (!song) return <div>Track not found</div>;
+  if (!song) notFound();
 
   return (
     <PageContent>

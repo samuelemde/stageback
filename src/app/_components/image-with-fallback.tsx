@@ -6,7 +6,7 @@ import Image, { type ImageProps, type StaticImageData } from "next/image";
 
 type ImageWithFallbackProps = Omit<ImageProps, "src"> & {
   fallback?: string | StaticImageData;
-  src?: string;
+  src: string | undefined | null;
 };
 
 export default function ImageWithFallback({
@@ -15,9 +15,9 @@ export default function ImageWithFallback({
   alt,
   ...props
 }: ImageWithFallbackProps) {
-  const [imgSrc, setImgSrc] = useState<string | StaticImageData | undefined>(
-    src,
-  );
+  const [imgSrc, setImgSrc] = useState<
+    string | StaticImageData | undefined | null
+  >(src);
   const onError = () => setImgSrc(fallback);
 
   return (

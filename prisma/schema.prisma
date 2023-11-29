@@ -68,8 +68,7 @@ model Song {
   lyrics    String?
   metadata  Json?
 
-  artwork      Image?       @relation(fields: [artworkId], references: [id])
-  artworkId    String?
+  artworkUrl   String?
   collections  Collection[]
   versionOfId  String?      @map("versionOf")
   versionOf    Song?        @relation("SongVersion", fields: [versionOfId], references: [id])
@@ -85,11 +84,13 @@ model Song {
 }
 
 model Album {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String   @unique
-  songs     Song[]
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  name       String   @unique
+  artist     String?
+  songs      Song[]
+  artworkUrl String?
 }
 
 model Collection {
@@ -111,7 +112,6 @@ model Image {
 
   uploadedBy   User   @relation(fields: [uploadedById], references: [id])
   uploadedById String
-  Song         Song[]
 
   @@index([name])
 }

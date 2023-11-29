@@ -1,5 +1,5 @@
 import { api } from "~/trpc/server";
-import { SongsPage } from "~/app/(library)/audio/songs-page";
+import { SongsPage } from "~/app/(library)/songs/songs-page";
 import PageContent from "~/components/page-content";
 
 export default async function Page() {

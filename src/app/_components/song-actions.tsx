@@ -17,7 +17,7 @@ type SongActionsProps = {
 };
 
 export default function SongActions({ song }: SongActionsProps) {
-  const { setSong, setIsOpen } = useVersionConnector();
+  const { setSong, setIsOpen: setVersionModalOpen } = useVersionConnector();
   return (
     <div>
       <DropdownMenu>
@@ -28,29 +28,20 @@ export default function SongActions({ song }: SongActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          {/*<VersionConnector*/}
-          {/*  song={song}*/}
-          {/*  trigger={*/}
-          {/*    <DropdownMenuItem*/}
-          {/*      onSelect={(e) => {*/}
-          {/*        setSong(song);*/}
-          {/*        setIsOpen(true);*/}
-          {/*        e.preventDefault();*/}
-          {/*      }}*/}
-          {/*    >*/}
-          {/*      Version of...*/}
-          {/*    </DropdownMenuItem>*/}
-          {/*  }*/}
-          {/*/>*/}
           <DropdownMenuItem
-            onSelect={(e) => {
+            onSelect={() => {
               setSong(song);
-              setIsOpen(true);
-              e.preventDefault();
+              setVersionModalOpen(true);
             }}
           >
             Version of...
           </DropdownMenuItem>
+          {song.versionOfId && (
+            <DropdownMenuItem>Promote to main version</DropdownMenuItem>
+          )}
+          {song.versionOfId && (
+            <DropdownMenuItem>Unlink version</DropdownMenuItem>
+          )}
           <DropdownMenuItem
             onClick={() => navigator.clipboard.writeText(song.url)}
           >
@@ -61,6 +52,7 @@ export default function SongActions({ song }: SongActionsProps) {
               Download
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuItem>Delete</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

@@ -4,12 +4,13 @@ import React from "react";
 import { api } from "~/trpc/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import SongList from "~/components/song-list";
-import { type SongWithAlbum } from "~/trpc/shared";
+import { type SongWithRelations } from "~/trpc/shared";
 import { defaultSongColumns } from "~/lib/default-song-columns";
+import VersionConnector from "~/components/version-connecter";
 
 type DataTableProps = {
-  masterVersions: SongWithAlbum[];
-  allSongs: SongWithAlbum[];
+  masterVersions: SongWithRelations[];
+  allSongs: SongWithRelations[];
 };
 
 export function SongsPage({ allSongs, masterVersions }: DataTableProps) {
@@ -34,6 +35,7 @@ export function SongsPage({ allSongs, masterVersions }: DataTableProps) {
           <SongList songs={all} columns={defaultSongColumns} />
         </TabsContent>
       </Tabs>
+      <VersionConnector />
     </div>
   );
 }
