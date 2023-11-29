@@ -26,6 +26,10 @@ export const env = createEnv({
     // Add ` on ID and SECRET if you want to make sure they're not empty
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
+    SPOTIFY_CLIENT_ID: z.string(),
+    SPOTIFY_CLIENT_SECRET: z.string(),
+    EMAIL_SERVER: z.string(),
+    EMAIL_FROM: z.string(),
   },
 
   /**
@@ -47,6 +51,10 @@ export const env = createEnv({
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
+    SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
+    EMAIL_SERVER: process.env.EMAIL_SERVER,
+    EMAIL_FROM: process.env.EMAIL_FROM,
     POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL,
     POSTGRES_URL_NON_POOLING: process.env.POSTGRES_URL_NON_POOLING,
   },

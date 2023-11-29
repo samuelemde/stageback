@@ -4,6 +4,8 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import SpotifyProvider from "next-auth/providers/spotify";
+import EmailProvider from "next-auth/providers/email";
 
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
@@ -58,9 +60,17 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(db),
   providers: [
+    EmailProvider({
+      server: process.env.EMAIL_SERVER,
+      from: process.env.EMAIL_FROM,
+    }),
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }),
+    SpotifyProvider({
+      clientId: env.SPOTIFY_CLIENT_ID,
+      clientSecret: env.SPOTIFY_CLIENT_SECRET,
     }),
     /**
      * ...add more providers here.
