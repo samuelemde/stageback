@@ -7,12 +7,9 @@ import { Button } from "~/components/ui/button";
 import { UploadDropzone } from "~/lib/uploadthing";
 import { toast } from "~/components/ui/use-toast";
 import { useSession } from "next-auth/react";
-import { api } from "~/trpc/react";
 
 export default function Home() {
-  // const session = await getServerAuthSession();
   const { data: session } = useSession();
-  const { mutate } = api.album.create.useMutation();
 
   return (
     <PageContent className="justify-center gap-y-20 p-10">
@@ -46,9 +43,6 @@ export default function Home() {
           });
         }}
       />
-      <Button onClick={() => mutate({ name: "temp", artist: "amorph" })}>
-        Create Album
-      </Button>
     </PageContent>
   );
 }
