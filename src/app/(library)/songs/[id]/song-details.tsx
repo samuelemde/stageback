@@ -83,7 +83,7 @@ export default function SongDetails({ initialSong, id }: SongDetailsProps) {
           alt={"artwork"}
           width={300}
           height={300}
-          className="rounded-md"
+          className="aspect-square rounded-md object-cover"
         />
 
         <div className="flex cursor-default flex-col items-start justify-end">
