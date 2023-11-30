@@ -29,14 +29,11 @@ export default function VersionConnector() {
 
   const utils = api.useUtils();
   const { mutate } = api.song.connectVersion.useMutation({
-    onSuccess: (song) => {
+    onSuccess: () => {
       setIsOpen(false);
       void utils.song.getMainVersions.invalidate();
       toast({
         title: "Version connected!",
-        description: `"${song.title}" is now a version of "${mainVersions?.find(
-          (s) => s.id === song.versionOfId,
-        )?.title}"`,
         action: <HiCheckCircle size={32} className="text-green-200" />,
       });
     },
