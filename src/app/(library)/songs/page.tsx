@@ -10,7 +10,7 @@ export default async function Page() {
 
   return (
     <PageContent className="gap-10">
-      <SongsPage allSongs={all} masterVersions={masters} />
+      <SongsPage allSongs={all} mainVersions={masters} />
     </PageContent>
   );
 }

@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import { type Song } from ".prisma/client";
+import { type SongWithRelations } from "~/trpc/shared";
 
 interface PlayerStore {
-  activeSong?: Song;
+  activeSong?: SongWithRelations;
   ids: string[];
   tempIds: string[];
-  setActiveSong: (track: Song | undefined) => void;
+  setActiveSong: (song: SongWithRelations | undefined) => void;
   setIds: (ids: string[]) => void;
   setTempIds: (ids: string[]) => void;
   updateIds: () => void;
@@ -19,7 +19,7 @@ const usePlayer = create<PlayerStore>((set) => ({
   activeSong: undefined,
   ids: [],
   tempIds: [],
-  setActiveSong: (track) => set({ activeSong: track }),
+  setActiveSong: (song) => set({ activeSong: song }),
   setIds: (ids) => set({ ids }),
   setTempIds: (ids) => set({ tempIds: ids }),
   updateIds: () => set((state) => ({ ids: state.tempIds, tempIds: [] })),

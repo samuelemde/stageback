@@ -10,6 +10,7 @@ import PlayerControls from "~/components/player-controls";
 import usePlayer from "~/app/_hooks/usePlayer";
 import { HiXMark } from "react-icons/hi2";
 import { Button } from "~/components/ui/button";
+import ImageWithFallback from "~/components/image-with-fallback";
 
 export default function AudioPlayer() {
   const { activeSong, ...player } = usePlayer();
@@ -78,7 +79,7 @@ export default function AudioPlayer() {
   if (!activeSong) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 h-[70px] bg-background px-8 py-3 text-background">
+    <div className="fixed inset-x-0 bottom-0 h-[70px] bg-background px-4 py-3 text-background">
       <audio
         ref={audioRef}
         preload="auto"
@@ -90,10 +91,19 @@ export default function AudioPlayer() {
       </audio>
 
       <div className="flex items-center justify-between gap-8">
-        <div className="flex w-1/6 flex-col">
-          <TitleScroller title={activeSong.title} />
-          <div className="text-xs font-light text-foreground">
-            {activeSong.artist}
+        <div className="flex w-1/6 flex-row gap-4">
+          <ImageWithFallback
+            src={activeSong.artworkUrl ?? activeSong.album?.artworkUrl}
+            alt={"artwork"}
+            width={40}
+            height={40}
+            className="aspect-square rounded-sm object-cover"
+          />
+          <div className="flex w-full flex-col">
+            <TitleScroller title={activeSong.title} />
+            <div className="text-xs font-light text-foreground">
+              {activeSong.artist}
+            </div>
           </div>
         </div>
         <PlayerControls audioRef={audioRef} />

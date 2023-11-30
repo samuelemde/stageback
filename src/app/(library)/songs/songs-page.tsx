@@ -9,16 +9,16 @@ import { defaultSongColumns } from "~/lib/default-song-columns";
 import VersionConnector from "~/components/version-connecter";
 
 type DataTableProps = {
-  masterVersions: SongWithRelations[];
+  mainVersions: SongWithRelations[];
   allSongs: SongWithRelations[];
 };
 
-export function SongsPage({ allSongs, masterVersions }: DataTableProps) {
+export function SongsPage({ allSongs, mainVersions }: DataTableProps) {
   const { data: all } = api.song.getAll.useQuery(undefined, {
     initialData: allSongs,
   });
-  const { data: masters } = api.song.getMainVersions.useQuery(undefined, {
-    initialData: masterVersions,
+  const { data: mains } = api.song.getMainVersions.useQuery(undefined, {
+    initialData: mainVersions,
   });
 
   return (
@@ -29,7 +29,7 @@ export function SongsPage({ allSongs, masterVersions }: DataTableProps) {
           <TabsTrigger value="password">All versions</TabsTrigger>
         </TabsList>
         <TabsContent value="account">
-          <SongList songs={masters} columns={defaultSongColumns} />
+          <SongList songs={mains} columns={defaultSongColumns} />
         </TabsContent>
         <TabsContent value="password">
           <SongList songs={all} columns={defaultSongColumns} />
