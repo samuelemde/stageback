@@ -15,6 +15,7 @@ import { formatDuration } from "~/lib/utils";
 import SongActions from "~/components/song-actions";
 import IndexPlayButton from "~/components/index-play-button";
 import SongTitle from "~/components/song-title";
+import VersionConnector from "~/components/version-connecter";
 
 const columns: ColumnDef<Song>[] = [
   {
@@ -91,6 +92,7 @@ export default function AlbumDetails({ id, initialAlbum }: AlbumDetailsProps) {
       {!!album.songs.length && (
         <SongList songs={album.songs} columns={columns} />
       )}
+      <VersionConnector />
     </div>
   );
 }

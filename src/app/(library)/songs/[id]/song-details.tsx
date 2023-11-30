@@ -14,6 +14,7 @@ import { HiPause, HiPlay } from "react-icons/hi2";
 import SongActions from "~/components/song-actions";
 import IndexPlayButton from "~/components/index-play-button";
 import SongTitle from "~/components/song-title";
+import VersionConnector from "~/components/version-connecter";
 
 const columns: ColumnDef<Song>[] = [
   {
@@ -95,6 +96,7 @@ export default function SongDetails({ initialSong, id }: SongDetailsProps) {
         </div>
       </div>
       <SongList songs={song.versions} columns={columns} />
+      <VersionConnector />
     </div>
   );
 }

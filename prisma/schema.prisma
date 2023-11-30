@@ -91,6 +91,7 @@ model Album {
   artist     String?
   songs      Song[]
   artworkUrl String?
+  year       Int?
 }
 
 model Collection {

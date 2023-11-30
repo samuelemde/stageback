@@ -30,7 +30,7 @@ export const defaultSongColumns: ColumnDef<SongWithRelations>[] = [
         alt={"artwork"}
         width={40}
         height={40}
-        className="rounded-sm"
+        className="aspect-square rounded-sm object-cover"
       />
     ),
   },
@@ -50,7 +50,7 @@ export const defaultSongColumns: ColumnDef<SongWithRelations>[] = [
         <div className="truncate">
           <Link
             className="hover:underline"
-            href={`/coming-soon?id=${row.original.albumId}`}
+            href={`/albums/${row.original.albumId}`}
           >
             {row.original.album?.name}
           </Link>

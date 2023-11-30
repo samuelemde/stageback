@@ -7,7 +7,7 @@ export default async function AlbumsPage() {
 
   return (
     <PageContent>
-      <div className="grid w-full grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:gap-y-10 lg:grid-cols-4 lg:gap-x-8">
+      <div className="grid w-full grid-cols-2 gap-x-4 gap-y-6 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-8">
         {albums.map((album) => (
           <AlbumCard key={album.id} album={album} />
         ))}

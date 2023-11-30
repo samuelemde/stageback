@@ -1,11 +1,18 @@
-import { getServerAuthSession } from "~/server/auth";
+"use client";
+
 import Link from "next/link";
 import PageContent from "~/components/page-content";
 import Uploader from "~/components/uploader";
 import { Button } from "~/components/ui/button";
+import { UploadDropzone } from "~/lib/uploadthing";
+import { toast } from "~/components/ui/use-toast";
+import { useSession } from "next-auth/react";
+import { api } from "~/trpc/react";
 
-export default async function Home() {
-  const session = await getServerAuthSession();
+export default function Home() {
+  // const session = await getServerAuthSession();
+  const { data: session } = useSession();
+  const { mutate } = api.album.create.useMutation();
 
   return (
     <PageContent className="justify-center gap-y-20 p-10">
@@ -23,6 +30,25 @@ export default async function Home() {
         <Uploader endpoint={"audioUploader"} />
         <Uploader endpoint={"imageUploader"} />
       </div>
+      <UploadDropzone
+        endpoint="audioUploader"
+        onClientUploadComplete={() => {
+          toast({
+            title: "Upload Successful!",
+          });
+        }}
+        onUploadError={(error: Error) => {
+          console.error(error);
+          toast({
+            variant: "destructive",
+            title: "Upload Failed!",
+            description: error.message,
+          });
+        }}
+      />
+      <Button onClick={() => mutate({ name: "temp", artist: "amorph" })}>
+        Create Album
+      </Button>
     </PageContent>
   );
 }

@@ -19,6 +19,7 @@ export const songRouter = createTRPCRouter({
     return ctx.db.song.findMany({
       where: { teamId: ctx.session.activeTeam.id },
       include: { album: true },
+      orderBy: { title: "asc" },
     });
   }),
 
@@ -26,6 +27,7 @@ export const songRouter = createTRPCRouter({
     return ctx.db.song.findMany({
       where: { teamId: ctx.session.activeTeam.id, versionOfId: null },
       include: { album: true },
+      orderBy: { title: "asc" },
     });
   }),
 
@@ -34,9 +36,8 @@ export const songRouter = createTRPCRouter({
       where: { id: input },
       include: {
         album: true,
-        versions: true,
-        uploadedBy: true,
         versionOf: true,
+        versions: { orderBy: { title: "asc" } },
       },
     });
   }),

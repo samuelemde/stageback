@@ -1,6 +1,5 @@
 import { type Album } from ".prisma/client";
 import ImageWithFallback from "~/components/image-with-fallback";
-import { formatYear } from "~/lib/utils";
 import Link from "next/link";
 
 export default function AlbumCard({ album }: { album: Album }) {
@@ -23,7 +22,7 @@ export default function AlbumCard({ album }: { album: Album }) {
           {album.name}
         </div>
         <div className="flex gap-2 overflow-hidden overflow-ellipsis whitespace-nowrap text-sm font-light">
-          <div>{formatYear(album.createdAt)}</div>
+          <div>{album.year}</div>
           <div>{album.artist}</div>
         </div>
       </div>
