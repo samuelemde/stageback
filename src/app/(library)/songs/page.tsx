@@ -1,6 +1,6 @@
 import { api } from "~/trpc/server";
 import { SongsPage } from "~/app/(library)/songs/songs-page";
-import PageContent from "~/components/page-content";
+import PageWithAuth from "~/components/page-with-auth";
 
 export default async function Page() {
   const [all, masters] = await Promise.all([
@@ -9,8 +9,8 @@ export default async function Page() {
   ]);
 
   return (
-    <PageContent className="gap-10">
+    <PageWithAuth>
       <SongsPage allSongs={all} mainVersions={masters} />
-    </PageContent>
+    </PageWithAuth>
   );
 }

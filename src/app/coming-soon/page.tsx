@@ -1,10 +1,13 @@
-import PageContent from "~/components/page-content";
+import PageWithAuth from "~/components/page-with-auth";
 import ComingSoon from "~/components/coming-soon";
+import { Sidebar } from "~/components/sidebar";
 
 export default function Page() {
   return (
-    <PageContent>
-      <ComingSoon />
-    </PageContent>
+    <Sidebar>
+      <PageWithAuth>
+        <ComingSoon />
+      </PageWithAuth>
+    </Sidebar>
   );
 }

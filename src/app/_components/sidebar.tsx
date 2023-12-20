@@ -5,14 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { HiCollection } from "react-icons/hi";
 import SidebarItem from "~/components/sidebar-item";
 import { RiHomeLine, RiSearchLine } from "react-icons/ri";
-import {
-  HiDocumentCheck,
-  HiDocumentDuplicate,
-  HiMusicalNote,
-  HiOutlineCamera,
-  HiOutlineVideoCamera,
-  HiQueueList,
-} from "react-icons/hi2";
+import { HiMusicalNote, HiQueueList } from "react-icons/hi2";
 import usePlayer from "~/app/_hooks/usePlayer";
 import { Toaster } from "~/components/ui/toaster";
 import React from "react";

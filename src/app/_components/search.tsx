@@ -49,7 +49,7 @@ export default function Search() {
 
       window.history.pushState({}, "", `${pathname}${query}`);
     }, 300),
-    [searchParams, pathname],
+    [searchParams, pathname, debounce],
   );
 
   const message = isFetching

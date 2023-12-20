@@ -1,10 +1,10 @@
-import PageContent from "~/components/page-content";
 import Search from "~/components/search";
+import PageWithAuth from "~/components/page-with-auth";
 
 export default async function Page() {
   return (
-    <PageContent className="gap-10">
+    <PageWithAuth>
       <Search />
-    </PageContent>
+    </PageWithAuth>
   );
 }

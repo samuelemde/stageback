@@ -1,7 +1,7 @@
 import { api } from "~/trpc/server";
-import PageContent from "~/components/page-content";
 import SongDetails from "~/app/(library)/songs/[id]/song-details";
 import { notFound } from "next/navigation";
+import PageWithAuth from "~/components/page-with-auth";
 
 export default async function AudioPage({
   params,
@@ -13,8 +13,8 @@ export default async function AudioPage({
   if (!song) notFound();
 
   return (
-    <PageContent>
+    <PageWithAuth>
       <SongDetails id={params.id} initialSong={song} />
-    </PageContent>
+    </PageWithAuth>
   );
 }
