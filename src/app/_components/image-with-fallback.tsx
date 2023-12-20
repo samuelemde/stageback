@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type SyntheticEvent, useEffect, useState } from "react";
 import ArtWorkPlaceholder from "public/images/artwork-placeholder.png";
 import Image, { type ImageProps, type StaticImageData } from "next/image";
 
@@ -15,16 +15,20 @@ export default function ImageWithFallback({
   alt,
   ...props
 }: ImageWithFallbackProps) {
-  const [imgSrc, setImgSrc] = useState<
-    string | StaticImageData | undefined | null
-  >(src);
-  const onError = () => setImgSrc(fallback);
+  const [error, setError] = useState<SyntheticEvent<
+    HTMLImageElement,
+    Event
+  > | null>(null);
+
+  useEffect(() => {
+    setError(null);
+  }, [src]);
 
   return (
     <Image
-      onError={onError}
-      src={imgSrc ? imgSrc : fallback}
       alt={alt}
+      onError={setError}
+      src={!error && src ? src : fallback}
       {...props}
     />
   );
