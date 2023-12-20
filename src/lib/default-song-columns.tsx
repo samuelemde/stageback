@@ -61,6 +61,7 @@ export const defaultSongColumns: ColumnDef<SongWithRelations>[] = [
         alt={"artwork"}
         width={40}
         height={40}
+        quality={70}
         className="aspect-square rounded-sm object-cover"
       />
     ),

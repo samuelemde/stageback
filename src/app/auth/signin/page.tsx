@@ -1,5 +1,4 @@
 import { getCsrfToken } from "next-auth/react";
-import PageWithAuth from "~/components/page-with-auth";
 import SigninPage from "~/app/auth/signin/signin-page";
 import { cookies } from "next/headers";
 
