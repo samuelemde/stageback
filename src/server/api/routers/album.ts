@@ -19,15 +19,9 @@ export const albumRouter = createTRPCRouter({
     });
   }),
 
-  getById: protectedProcedure.input(z.string()).query(({ ctx, input }) => {
+  getById: protectedProcedure.input(z.string()).query(({ ctx, input: id }) => {
     return ctx.db.album.findUnique({
-      where: { id: input },
-      include: {
-        songs: {
-          where: { teamId: ctx.session.activeTeam.id, versionOfId: null },
-          orderBy: [{ trackNo: "asc" }, { title: "asc" }],
-        },
-      },
+      where: { id },
     });
   }),
 });

@@ -53,21 +53,20 @@ model User {
 }
 
 model Song {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  key       String   @unique
-  fileName  String
-  title     String
-  artist    String
-  url       String
-  trackNo   Int?
-  trackOf   Int?
-  size      BigInt
-  duration  Int
-  lyrics    String?
-  metadata  Json?
-
+  id           String       @id @default(cuid())
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  key          String       @unique
+  fileName     String
+  title        String
+  artist       String
+  url          String
+  trackNo      Int?
+  trackOf      Int?
+  size         BigInt
+  duration     Int
+  lyrics       String?
+  metadata     Json?
   artworkUrl   String?
   collections  Collection[]
   versionOfId  String?      @map("versionOf")

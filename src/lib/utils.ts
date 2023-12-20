@@ -38,3 +38,18 @@ export function formatDuration(duration: number) {
 export function formatYear(date: Date) {
   return date.getFullYear();
 }
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export function debounce<T extends (...args: any[]) => unknown>(
+  cb: T,
+  wait: number,
+) {
+  let h: NodeJS.Timeout;
+  const callable = (...args: any[]) => {
+    clearTimeout(h);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    h = setTimeout(() => cb(...args), wait);
+  };
+  return callable as any as T;
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */

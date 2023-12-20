@@ -1,13 +1,12 @@
 "use client";
 
 import { api } from "~/trpc/react";
-import { type RouterOutputs } from "~/trpc/shared";
+import { type RouterOutputs, type SongWithRelations } from "~/trpc/shared";
 import ImageWithFallback from "~/components/image-with-fallback";
 import React from "react";
 import usePlayer from "~/app/_hooks/usePlayer";
 import SongList from "~/components/song-list";
 import { type ColumnDef } from "@tanstack/react-table";
-import { type Song } from ".prisma/client";
 import { formatDuration } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
 import { HiPause, HiPlay } from "react-icons/hi2";
@@ -16,7 +15,7 @@ import IndexPlayButton from "~/components/index-play-button";
 import SongTitle from "~/components/song-title";
 import VersionConnector from "~/components/version-connecter";
 
-const columns: ColumnDef<Song>[] = [
+const columns: ColumnDef<SongWithRelations>[] = [
   {
     header: () => <div className="sr-only">Index</div>,
     accessorFn: (_, index) => index + 1,
@@ -62,8 +61,7 @@ export default function SongDetails({ initialSong, id }: SongDetailsProps) {
 
   if (!song) return null;
 
-  const PlayIcon =
-    player.activeSong?.id === song.id && player.isPlaying ? HiPause : HiPlay;
+  const isPlaying = player.activeSong?.id === song.id && player.isPlaying;
 
   function togglePlay() {
     if (!song) return;
@@ -90,7 +88,7 @@ export default function SongDetails({ initialSong, id }: SongDetailsProps) {
           <h1 className="text-xl font-bold">{song.title}</h1>
           <h3 className="pb-10 text-sm font-medium">{song.artist}</h3>
           <Button onClick={togglePlay} className="gap-2">
-            <PlayIcon size={20} />
+            {isPlaying ? <HiPause size={20} /> : <HiPlay size={20} />}
             <span>Main Version</span>
           </Button>
         </div>

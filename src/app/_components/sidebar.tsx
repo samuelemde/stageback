@@ -37,7 +37,7 @@ export function Sidebar({ className, children }: SidebarProps) {
             <SidebarItem href="/" label="Home">
               <RiHomeLine size={18} />
             </SidebarItem>
-            <SidebarItem href="/coming-soon" label="Search">
+            <SidebarItem href="/search" label="Search">
               <RiSearchLine size={18} />
             </SidebarItem>
           </CardContent>
@@ -53,34 +53,34 @@ export function Sidebar({ className, children }: SidebarProps) {
             <SidebarItem href="/albums" label="Albums">
               <HiCollection size={18} />
             </SidebarItem>
-            <SidebarItem href="/coming-soon" label="Collections">
-              <HiQueueList size={18} />
-            </SidebarItem>
+            {/*<SidebarItem href="/coming-soon" label="Collections">*/}
+            {/*  <HiQueueList size={18} />*/}
+            {/*</SidebarItem>*/}
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Visuals</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SidebarItem href="/coming-soon" label="Photos">
-              <HiOutlineCamera size={18} />
-            </SidebarItem>
-            <SidebarItem href="/coming-soon" label="Videos">
-              <HiOutlineVideoCamera size={18} />
-            </SidebarItem>
-          </CardContent>
-        </Card>
+        {/*<Card>*/}
+        {/*  <CardHeader>*/}
+        {/*    <CardTitle>Visuals</CardTitle>*/}
+        {/*  </CardHeader>*/}
+        {/*  <CardContent>*/}
+        {/*    <SidebarItem href="/coming-soon" label="Photos">*/}
+        {/*      <HiOutlineCamera size={18} />*/}
+        {/*    </SidebarItem>*/}
+        {/*    <SidebarItem href="/coming-soon" label="Videos">*/}
+        {/*      <HiOutlineVideoCamera size={18} />*/}
+        {/*    </SidebarItem>*/}
+        {/*  </CardContent>*/}
+        {/*</Card>*/}
         <Card className="h-full overflow-y-auto">
           <CardHeader>
-            <CardTitle>Other</CardTitle>
+            <CardTitle>Playlists</CardTitle>
           </CardHeader>
           <CardContent>
-            <SidebarItem href="/coming-soon" label="Documents">
-              <HiDocumentDuplicate size={18} />
-            </SidebarItem>
-            <SidebarItem href="/coming-soon" label="Contracts">
-              <HiDocumentCheck size={18} />
+            {/*<SidebarItem href="/coming-soon" label="Coming soon..">*/}
+            {/*  <HiDocumentDuplicate size={18} />*/}
+            {/*</SidebarItem>*/}
+            <SidebarItem href="/coming-soon" label="Coming soon">
+              <HiQueueList size={18} />
             </SidebarItem>
           </CardContent>
         </Card>

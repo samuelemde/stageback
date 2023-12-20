@@ -6,12 +6,17 @@ import * as React from "react";
 import { type RefObject, useEffect, useState } from "react";
 import usePlayer from "~/app/_hooks/usePlayer";
 import { Button } from "~/components/ui/button";
+import { BsFillSkipEndFill, BsFillSkipStartFill } from "react-icons/bs";
+import { api } from "~/trpc/react";
 
 type PlayerControlsProps = { audioRef: RefObject<HTMLAudioElement> };
 
 export default function PlayerControls({ audioRef }: PlayerControlsProps) {
   const player = usePlayer();
   const [isReady, setIsReady] = useState(false);
+  const { data: next } = api.song.getById.useQuery(player.ids[1]!, {
+    enabled: player.ids[1] !== undefined,
+  });
 
   useEffect(() => {
     if (!audioRef.current) return;
@@ -39,8 +44,16 @@ export default function PlayerControls({ audioRef }: PlayerControlsProps) {
     };
   }, [audioRef]);
 
+  const handleNext = () => {
+    if (!next) return;
+    player.setActiveSong(next);
+  };
+
   return (
-    <div>
+    <div className="flex items-center justify-center gap-4">
+      <Button variant="player" className="h-7 w-7 p-0">
+        <BsFillSkipStartFill className="h-full w-full text-muted-foreground hover:text-accent-foreground" />
+      </Button>
       <Button
         disabled={!isReady}
         onClick={player.togglePlay}
@@ -55,6 +68,15 @@ export default function PlayerControls({ audioRef }: PlayerControlsProps) {
         ) : (
           <HiPlay className="h-full w-full" />
         )}
+      </Button>
+
+      <Button
+        disabled={!next}
+        onClick={handleNext}
+        variant="player"
+        className="h-7 w-7 p-0"
+      >
+        <BsFillSkipEndFill className="h-full w-full text-muted-foreground hover:text-accent-foreground" />
       </Button>
     </div>
   );

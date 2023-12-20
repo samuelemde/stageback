@@ -5,10 +5,11 @@ import { HiPause, HiPlay } from "react-icons/hi2";
 import { type HTMLAttributes, type MouseEvent } from "react";
 import { cn } from "~/lib/utils";
 import { type Song } from ".prisma/client";
+import { type SongWithRelations } from "~/trpc/shared";
 
 type PlayButtonProps = HTMLAttributes<HTMLDivElement> & {
   index: number;
-  song: Song;
+  song: SongWithRelations;
   size?: number;
 };
 

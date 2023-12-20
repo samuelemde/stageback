@@ -13,6 +13,8 @@ interface PlayerStore {
   isPlaying: boolean;
   setIsPlaying: (value: boolean) => void;
   togglePlay: () => void;
+  spaceBarEnabled: boolean;
+  setSpaceBarEnabled: (value: boolean) => void;
 }
 
 const usePlayer = create<PlayerStore>((set) => ({
@@ -27,6 +29,8 @@ const usePlayer = create<PlayerStore>((set) => ({
   isPlaying: false,
   setIsPlaying: (value) => set({ isPlaying: value }),
   togglePlay: () => set((state) => ({ isPlaying: !state.isPlaying })),
+  spaceBarEnabled: true,
+  setSpaceBarEnabled: (value) => set({ spaceBarEnabled: value }),
 }));
 
 export default usePlayer;

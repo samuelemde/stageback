@@ -9,13 +9,16 @@ export default async function AlbumPage({
 }: {
   params: { id: string };
 }) {
-  const album = await api.album.getById.query(params.id);
+  const [album, songs] = await Promise.all([
+    api.album.getById.query(params.id),
+    api.song.getMainVersionsForAlbum.query(params.id),
+  ]);
 
   if (!album) notFound();
 
   return (
     <PageContent>
-      <AlbumDetails id={params.id} initialAlbum={album} />
+      <AlbumDetails id={params.id} initialAlbum={album} initialSongs={songs} />
     </PageContent>
   );
 }

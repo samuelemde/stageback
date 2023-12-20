@@ -27,22 +27,6 @@ export default function Home() {
         <Uploader endpoint={"audioUploader"} />
         <Uploader endpoint={"imageUploader"} />
       </div>
-      <UploadDropzone
-        endpoint="audioUploader"
-        onClientUploadComplete={() => {
-          toast({
-            title: "Upload Successful!",
-          });
-        }}
-        onUploadError={(error: Error) => {
-          console.error(error);
-          toast({
-            variant: "destructive",
-            title: "Upload Failed!",
-            description: error.message,
-          });
-        }}
-      />
     </PageContent>
   );
 }

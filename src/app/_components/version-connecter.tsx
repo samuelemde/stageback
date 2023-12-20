@@ -53,7 +53,7 @@ export default function VersionConnector() {
         <DialogHeader>
           <DialogTitle>Connect version</DialogTitle>
           <DialogDescription>
-            Make this song a version of another song.
+            Make &quot;{song.title}&quot; a version of another song.
           </DialogDescription>
         </DialogHeader>
         <Select onValueChange={(id) => setVersionOfId(id)}>
@@ -76,7 +76,7 @@ export default function VersionConnector() {
             disabled={!versionOfId}
             onClick={() => mutate({ id: song.id, versionOfId: versionOfId! })}
           >
-            Save changes
+            Connect
           </Button>
         </DialogFooter>
       </DialogContent>

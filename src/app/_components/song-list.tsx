@@ -1,11 +1,12 @@
-import { type Song } from ".prisma/client";
 import usePlayer from "~/app/_hooks/usePlayer";
-import React, { type MouseEvent, useEffect } from "react";
+import React, { type MouseEvent, useEffect, useState } from "react";
 import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
+  type SortingState,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -15,19 +16,21 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { type SongWithRelations } from "~/trpc/shared";
 
-interface SongListProps<TData extends Song, TValue> {
+interface SongListProps<TData extends SongWithRelations, TValue> {
   columns: ColumnDef<TData, TValue>[];
   songs: TData[];
 }
 
-export default function SongList<TData extends Song, TValue>({
+export default function SongList<TData extends SongWithRelations, TValue>({
   columns,
   songs,
 }: SongListProps<TData, TValue>) {
   const player = usePlayer();
+  const [sorting, setSorting] = useState<SortingState>([]);
 
-  function onClick(e: MouseEvent, song: Song) {
+  function onClick(e: MouseEvent, song: SongWithRelations) {
     e.preventDefault();
     if (player.activeSong?.id !== song.id) player.setActiveSong(song);
     else player.togglePlay();
@@ -36,12 +39,17 @@ export default function SongList<TData extends Song, TValue>({
 
   useEffect(() => {
     player.setTempIds(songs.map((song) => song.id));
-  }, [player.setTempIds, songs]);
+  }, [player.setTempIds, songs]); // exclude player to prevent infinite loop
 
   const table = useReactTable({
     data: songs,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
   });
 
   return (

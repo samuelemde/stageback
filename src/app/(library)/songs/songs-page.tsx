@@ -23,15 +23,15 @@ export function SongsPage({ allSongs, mainVersions }: DataTableProps) {
 
   return (
     <div>
-      <Tabs defaultValue="account" className="w-full">
+      <Tabs defaultValue="main" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="account">Main versions</TabsTrigger>
-          <TabsTrigger value="password">All versions</TabsTrigger>
+          <TabsTrigger value="main">Main versions</TabsTrigger>
+          <TabsTrigger value="all">All versions</TabsTrigger>
         </TabsList>
-        <TabsContent value="account">
+        <TabsContent value="main">
           <SongList songs={mains} columns={defaultSongColumns} />
         </TabsContent>
-        <TabsContent value="password">
+        <TabsContent value="all">
           <SongList songs={all} columns={defaultSongColumns} />
         </TabsContent>
       </Tabs>

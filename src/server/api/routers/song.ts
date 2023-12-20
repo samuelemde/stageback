@@ -19,7 +19,7 @@ export const songRouter = createTRPCRouter({
     return ctx.db.song.findMany({
       where: { teamId: ctx.session.activeTeam.id },
       include: { album: true },
-      orderBy: { title: "asc" },
+      orderBy: { album: { year: "desc" } },
     });
   }),
 
@@ -27,17 +27,31 @@ export const songRouter = createTRPCRouter({
     return ctx.db.song.findMany({
       where: { teamId: ctx.session.activeTeam.id, versionOfId: null },
       include: { album: true },
-      orderBy: { title: "asc" },
+      orderBy: { album: { year: "desc" } },
     });
   }),
 
-  getById: protectedProcedure.input(z.string()).query(({ ctx, input }) => {
+  getMainVersionsForAlbum: protectedProcedure
+    .input(z.string())
+    .query(({ input: albumId, ctx }) => {
+      return ctx.db.song.findMany({
+        where: {
+          albumId,
+          teamId: ctx.session.activeTeam.id,
+          versionOfId: null,
+        },
+        include: { album: true },
+        orderBy: { trackNo: "asc" },
+      });
+    }),
+
+  getById: protectedProcedure.input(z.string()).query(({ ctx, input: id }) => {
     return ctx.db.song.findUnique({
-      where: { id: input },
+      where: { id },
       include: {
         album: true,
         versionOf: true,
-        versions: { orderBy: { title: "asc" } },
+        versions: { include: { album: true }, orderBy: { title: "asc" } },
       },
     });
   }),
@@ -52,6 +66,23 @@ export const songRouter = createTRPCRouter({
       return ctx.db.song.updateMany({
         where: { id: { in: ids } },
         data: { versionOfId: input.versionOfId },
+      });
+    }),
+
+  search: protectedProcedure
+    .input(z.string().optional())
+    .query(({ ctx, input: query }) => {
+      return ctx.db.song.findMany({
+        where: {
+          teamId: ctx.session.activeTeam.id,
+          OR: [
+            { title: { contains: query, mode: "insensitive" } },
+            { artist: { contains: query, mode: "insensitive" } },
+            { album: { name: { contains: query, mode: "insensitive" } } },
+          ],
+        },
+        include: { album: true },
+        orderBy: { album: { year: "desc" } },
       });
     }),
 });

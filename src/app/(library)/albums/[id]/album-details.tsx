@@ -7,17 +7,16 @@ import { HiPlay } from "react-icons/hi2";
 import SongList from "~/components/song-list";
 import React from "react";
 import { notFound } from "next/navigation";
-import { type RouterOutputs } from "~/trpc/shared";
+import { type RouterOutputs, type SongWithRelations } from "~/trpc/shared";
 import usePlayer from "~/app/_hooks/usePlayer";
 import { type ColumnDef } from "@tanstack/react-table";
-import { type Song } from ".prisma/client";
 import { formatDuration } from "~/lib/utils";
 import SongActions from "~/components/song-actions";
 import IndexPlayButton from "~/components/index-play-button";
 import SongTitle from "~/components/song-title";
 import VersionConnector from "~/components/version-connecter";
 
-const columns: ColumnDef<Song>[] = [
+const columns: ColumnDef<SongWithRelations>[] = [
   {
     header: () => <div className="sr-only">Index</div>,
     accessorFn: (_, index) => index + 1,
@@ -53,12 +52,20 @@ const columns: ColumnDef<Song>[] = [
 type AlbumDetailsProps = {
   id: string;
   initialAlbum: NonNullable<RouterOutputs["album"]["getById"]>;
+  initialSongs: NonNullable<RouterOutputs["song"]["getMainVersionsForAlbum"]>;
 };
 
-export default function AlbumDetails({ id, initialAlbum }: AlbumDetailsProps) {
+export default function AlbumDetails({
+  id,
+  initialAlbum,
+  initialSongs,
+}: AlbumDetailsProps) {
   const player = usePlayer();
   const { data: album } = api.album.getById.useQuery(id, {
     initialData: initialAlbum,
+  });
+  const { data: songs } = api.song.getMainVersionsForAlbum.useQuery(id, {
+    initialData: initialSongs,
   });
 
   if (!album) notFound();
@@ -79,7 +86,7 @@ export default function AlbumDetails({ id, initialAlbum }: AlbumDetailsProps) {
           <h3 className="pb-10 text-sm font-medium">{album.artist}</h3>
           <Button
             onClick={() => {
-              player.setActiveSong(album.songs[0]);
+              player.setActiveSong(songs[0]);
               player.setIsPlaying(true);
             }}
             className="gap-2"
@@ -89,9 +96,7 @@ export default function AlbumDetails({ id, initialAlbum }: AlbumDetailsProps) {
           </Button>
         </div>
       </div>
-      {!!album.songs.length && (
-        <SongList songs={album.songs} columns={columns} />
-      )}
+      {!!songs.length && <SongList songs={songs} columns={columns} />}
       <VersionConnector />
     </div>
   );

@@ -35,8 +35,7 @@ export default function AudioPlayer() {
   // use space bar to play/pause
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.code === "Space") {
-        e.preventDefault();
+      if (e.code === "Space" && player.spaceBarEnabled) {
         player.togglePlay();
       }
     };
@@ -46,7 +45,7 @@ export default function AudioPlayer() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [player.togglePlay]);
+  }, [player.togglePlay, player.spaceBarEnabled]);
 
   // use media keys to play/pause
   useEffect(() => {
