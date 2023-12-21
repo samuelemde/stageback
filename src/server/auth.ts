@@ -44,7 +44,7 @@ export const authOptions: NextAuthOptions = {
       const userTeams = await db.user.findUnique({
         where: { id: user.id },
         select: {
-          teams: true, // Assuming a relation is set up in Prisma schema
+          teams: true,
         },
       });
       return {
