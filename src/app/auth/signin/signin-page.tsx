@@ -8,15 +8,28 @@ import { Separator } from "~/components/ui/separator";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { useSearchParams } from "next/navigation";
+import { cn } from "~/lib/utils";
+import { AuthError } from "~/lib/error-map";
 
 export default function SigninPage({ csrfToken }: { csrfToken: string }) {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? undefined;
+  const error = searchParams.get("error") ?? undefined;
+
   return (
     <>
-      <h1 className="my-12 text-4xl text-accent-foreground">
-        Log in or sign up
+      <h1
+        className={cn("mb-12 mt-4 text-4xl font-bold text-accent-foreground", {
+          "mb-6": !!error,
+        })}
+      >
+        StageBack
       </h1>
+      {error && (
+        <div className="mb-6 w-72 rounded-md bg-primary/10 p-2 text-sm text-primary">
+          {AuthError[error as keyof typeof AuthError] ?? error}
+        </div>
+      )}
       <div className="flex h-full w-full flex-col items-center gap-8">
         <Button
           className="w-72 bg-accent py-6 hover:bg-foreground/50"
