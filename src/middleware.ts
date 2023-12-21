@@ -1,7 +1,5 @@
 import { withAuth } from "next-auth/middleware";
 import { env } from "~/env.mjs";
-import { getSession } from "next-auth/react";
-import { getToken } from "next-auth/jwt";
 
 export default withAuth({
   callbacks: {

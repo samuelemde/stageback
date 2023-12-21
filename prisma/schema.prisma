@@ -34,6 +34,7 @@ model Team {
   songs       Song[]
   createdBy   User     @relation("Creator", fields: [createdById], references: [id])
   createdById String
+  activeUsers User[]   @relation("ActiveTeam")
 
   @@index([name])
 }
@@ -50,6 +51,8 @@ model User {
   createdTeams  Team[]    @relation("Creator")
   Song          Song[]
   Image         Image[]
+  activeTeam    Team?     @relation("ActiveTeam", fields: [activeTeamId], references: [id])
+  activeTeamId  String?
 }
 
 model Song {

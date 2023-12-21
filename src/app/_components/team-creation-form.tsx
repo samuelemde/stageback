@@ -28,8 +28,8 @@ export function TeamCreationForm() {
   const router = useRouter();
 
   const { mutate } = api.team.create.useMutation({
-    onSuccess: (data) => {
-      void update({ activeTeamId: data.id }).then(() => void router.push("/"));
+    onSuccess: () => {
+      void update().then(() => void router.push("/"));
     },
   });
 

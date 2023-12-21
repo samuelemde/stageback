@@ -2,7 +2,7 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import { api } from "~/trpc/react";
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import SongList from "~/components/song-list";
 import { defaultSongColumns } from "~/lib/default-song-columns";
 import { debounce } from "~/lib/utils";
@@ -35,22 +35,19 @@ export default function Search() {
     }
   }, []);
 
-  const debouncedSearch = useCallback(
-    debounce((value: string) => {
-      const current = new URLSearchParams(Array.from(searchParams.entries()));
+  const debouncedSearch = debounce((value: string) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
 
-      if (!value) {
-        current.delete("q");
-      } else {
-        current.set("q", value);
-      }
-      const search = current.toString();
-      const query = search ? `?${search}` : "";
+    if (!value) {
+      current.delete("q");
+    } else {
+      current.set("q", value);
+    }
+    const search = current.toString();
+    const query = search ? `?${search}` : "";
 
-      window.history.pushState({}, "", `${pathname}${query}`);
-    }, 300),
-    [searchParams, pathname, debounce],
-  );
+    window.history.pushState({}, "", `${pathname}${query}`);
+  }, 300);
 
   const message = isFetching
     ? "Searching..."

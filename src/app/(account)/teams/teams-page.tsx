@@ -21,6 +21,11 @@ export default function TeamsPage({
   const { data: teams } = api.team.getAllForUser.useQuery(undefined, {
     initialData: initialTeams,
   });
+  const { mutate: updateActiveTeam } = api.user.updateActiveTeam.useMutation({
+    onSuccess: () => {
+      void update().then(() => void router.push("/"));
+    },
+  });
   const { update } = useSession();
   const router = useRouter();
 
@@ -30,8 +35,7 @@ export default function TeamsPage({
         <h1 className="text-3xl font-bold">Select your team</h1>
         <Select
           onValueChange={(id) => {
-            void update({ activeTeamId: id });
-            void router.push("/");
+            updateActiveTeam(id);
           }}
         >
           <SelectTrigger className="w-full">

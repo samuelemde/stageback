@@ -1,6 +1,6 @@
 import {
-  getServerSession,
   type DefaultSession,
+  getServerSession,
   type NextAuthOptions,
 } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
@@ -10,7 +10,6 @@ import EmailProvider from "next-auth/providers/email";
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { type Team } from ".prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -22,14 +21,13 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      activeTeamId: string;
     } & DefaultSession["user"];
-    activeTeamId: string;
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    activeTeamId: string;
+  }
 }
 
 /**
@@ -40,17 +38,13 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     session: async ({ session, user }) => {
-      const activeTeam = await db.team.findFirst({
-        where: { members: { some: { id: user.id } } },
-      });
-
       return {
         ...session,
         user: {
           ...session.user,
           id: user.id,
+          activeTeamId: user.activeTeamId,
         },
-        activeTeamId: activeTeam?.id ?? null,
       };
     },
     redirect: async ({ baseUrl }) => {
