@@ -22,9 +22,8 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      teams: Team[];
     } & DefaultSession["user"];
-    activeTeam: Team;
+    activeTeamId: string;
   }
 
   // interface User {
@@ -41,21 +40,21 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     session: async ({ session, user }) => {
-      const userTeams = await db.user.findUnique({
-        where: { id: user.id },
-        select: {
-          teams: true,
-        },
+      const activeTeam = await db.team.findFirst({
+        where: { members: { some: { id: user.id } } },
       });
+
       return {
         ...session,
         user: {
           ...session.user,
           id: user.id,
-          teams: userTeams?.teams ?? [],
         },
-        activeTeam: userTeams?.teams[0] ?? null,
+        activeTeamId: activeTeam?.id ?? null,
       };
+    },
+    redirect: async ({ baseUrl }) => {
+      return `${baseUrl}/teams`;
     },
   },
   adapter: PrismaAdapter(db),

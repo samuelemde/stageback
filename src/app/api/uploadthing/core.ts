@@ -9,7 +9,7 @@ const f = createUploadthing();
 
 const auth = async () => {
   const session = await getServerAuthSession();
-  if (!session?.user || !session.activeTeam) throw new Error("Unauthorized");
+  if (!session?.user || !session.activeTeamId) throw new Error("Unauthorized");
   return session;
 };
 
@@ -69,7 +69,7 @@ export const fileRouter = {
         size: BigInt(size),
         duration: Math.floor(md.format.duration ?? 0),
         metadata: JSON.parse(JSON.stringify(commonMetadata)) as InputJsonValue,
-        team: { connect: { id: metadata.activeTeam.id } },
+        team: { connect: { id: metadata.activeTeamId } },
         uploadedBy: { connect: { id: metadata.user.id } },
       };
       await db.song.create({ data });

@@ -17,7 +17,7 @@ export const songRouter = createTRPCRouter({
 
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.db.song.findMany({
-      where: { teamId: ctx.session.activeTeam.id },
+      where: { teamId: ctx.session.activeTeamId },
       include: { album: true },
       orderBy: { album: { year: "desc" } },
     });
@@ -25,7 +25,7 @@ export const songRouter = createTRPCRouter({
 
   getMainVersions: protectedProcedure.query(({ ctx }) => {
     return ctx.db.song.findMany({
-      where: { teamId: ctx.session.activeTeam.id, versionOfId: null },
+      where: { teamId: ctx.session.activeTeamId, versionOfId: null },
       include: { album: true },
       orderBy: { album: { year: "desc" } },
     });
@@ -37,7 +37,7 @@ export const songRouter = createTRPCRouter({
       return ctx.db.song.findMany({
         where: {
           albumId,
-          teamId: ctx.session.activeTeam.id,
+          teamId: ctx.session.activeTeamId,
           versionOfId: null,
         },
         include: { album: true },
@@ -74,7 +74,7 @@ export const songRouter = createTRPCRouter({
     .query(({ ctx, input: query }) => {
       return ctx.db.song.findMany({
         where: {
-          teamId: ctx.session.activeTeam.id,
+          teamId: ctx.session.activeTeamId,
           OR: [
             { title: { contains: query, mode: "insensitive" } },
             { artist: { contains: query, mode: "insensitive" } },

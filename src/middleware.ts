@@ -1,15 +1,17 @@
 import { withAuth } from "next-auth/middleware";
 import { env } from "~/env.mjs";
+import { getSession } from "next-auth/react";
+import { getToken } from "next-auth/jwt";
 
 export default withAuth({
   callbacks: {
-    authorized: ({ req: { cookies } }) => {
+    authorized: async ({ req }) => {
       const cookieName =
         env.NODE_ENV === "production"
           ? "__Secure-next-auth.session-token"
           : "next-auth.session-token";
-      const sessionToken = cookies.get(cookieName);
-      return sessionToken != null;
+      const sessionToken = req.cookies.get(cookieName);
+      return !!sessionToken;
     },
   },
   pages: {

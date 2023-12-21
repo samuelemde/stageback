@@ -14,7 +14,7 @@ export const albumRouter = createTRPCRouter({
 
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.db.album.findMany({
-      where: { songs: { some: { teamId: ctx.session.activeTeam.id } } },
+      where: { songs: { some: { teamId: ctx.session.activeTeamId } } },
       orderBy: [{ year: "desc" }, { name: "asc" }],
     });
   }),

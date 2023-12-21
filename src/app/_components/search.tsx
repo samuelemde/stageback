@@ -65,7 +65,7 @@ export default function Search() {
           ref={inputRef}
           type="search"
           name="q"
-          className="text-md h-12 rounded-full bg-background pl-10"
+          className="h-12 rounded-full bg-background pl-10"
           defaultValue={q}
           onChange={(e) => debouncedSearch(e.target.value)}
           onFocus={() => setSpaceBarEnabled(false)}
