@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { ImSpinner2 } from "react-icons/im";
 
 export default function TeamsPage({
   initialTeams,
@@ -23,38 +24,47 @@ export default function TeamsPage({
     initialData: initialTeams,
   });
 
-  const { mutate: updateActiveTeam } = api.user.updateActiveTeam.useMutation({
-    onSuccess: () => {
-      void update().then(() => {
-        void utils.song.invalidate();
-        void utils.album.invalidate();
-        void router.push("/");
-      });
-    },
-  });
+  const { mutate: updateActiveTeam, isIdle } =
+    api.user.updateActiveTeam.useMutation({
+      onSuccess: () => {
+        void update().then(() => {
+          void utils.song.invalidate();
+          void utils.album.invalidate();
+          void router.push("/");
+        });
+      },
+    });
   const { update } = useSession();
   const router = useRouter();
 
   if (teams.length > 0) {
     return (
       <div className="flex flex-col gap-10 p-8">
-        <h1 className="text-3xl font-bold">Select your team</h1>
-        <Select
-          onValueChange={(id) => {
-            updateActiveTeam(id);
-          }}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Teams" />
-          </SelectTrigger>
-          <SelectContent>
-            {teams.map((team) => (
-              <SelectItem key={team.id} value={team.id}>
-                {team.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <h1 className="text-3xl font-bold text-accent-foreground">
+          Select your team
+        </h1>
+        {!isIdle ? (
+          <div className="flex justify-center">
+            <ImSpinner2 className="h-12 w-12 animate-spin p-1" />
+          </div>
+        ) : (
+          <Select
+            onValueChange={(id) => {
+              updateActiveTeam(id);
+            }}
+          >
+            <SelectTrigger className="text-md h-12 w-full border-accent">
+              <SelectValue placeholder="Teams" />
+            </SelectTrigger>
+            <SelectContent>
+              {teams.map((team) => (
+                <SelectItem key={team.id} value={team.id}>
+                  {team.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
     );
   }
