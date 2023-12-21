@@ -18,12 +18,18 @@ export default function TeamsPage({
 }: {
   initialTeams: RouterOutputs["team"]["getAllForUser"];
 }) {
+  const utils = api.useUtils();
   const { data: teams } = api.team.getAllForUser.useQuery(undefined, {
     initialData: initialTeams,
   });
+
   const { mutate: updateActiveTeam } = api.user.updateActiveTeam.useMutation({
     onSuccess: () => {
-      void update().then(() => void router.push("/"));
+      void update().then(() => {
+        void utils.song.invalidate();
+        void utils.album.invalidate();
+        void router.push("/");
+      });
     },
   });
   const { update } = useSession();

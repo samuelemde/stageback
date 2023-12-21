@@ -24,6 +24,7 @@ export default function PageWithAuth({
   children,
   className,
 }: HTMLAttributes<HTMLDivElement>) {
+  const utils = api.useUtils();
   const { data, update } = useSession();
   const [otherTeams, setOtherTeams] = useState<Team[]>([]);
 
@@ -33,7 +34,13 @@ export default function PageWithAuth({
   });
   const { data: teams } = api.team.getAllForUser.useQuery();
   const { mutate: updateActiveTeam } = api.user.updateActiveTeam.useMutation({
-    onSuccess: () => update(),
+    onSuccess: () => {
+      void update().then(() => {
+        console.log("INVALIDATEE");
+        void utils.song.invalidate();
+        void utils.album.invalidate();
+      });
+    },
   });
 
   useEffect(() => {
