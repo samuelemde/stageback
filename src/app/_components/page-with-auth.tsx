@@ -11,8 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { CiUser } from "react-icons/ci";
 import Navigation from "~/components/navigation";
+import { HiOutlineUser } from "react-icons/hi2";
 
 export default function PageWithAuth({
   children,
@@ -30,7 +30,7 @@ export default function PageWithAuth({
         <div className="flex items-center gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger className="rounded-full">
-              <CiUser className="h-8 w-8 rounded-full border border-primary p-1.5 text-accent-foreground hover:scale-110 hover:bg-background" />
+              <HiOutlineUser className="h-9 w-9 rounded-full border border-primary p-2 text-accent-foreground hover:scale-110 hover:bg-background" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
