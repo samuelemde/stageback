@@ -13,8 +13,11 @@ export default withAuth({
     },
   },
   pages: {
-    signIn: "/auth/signin", // override signin page
+    signIn: "/auth/signin",
+    verifyRequest: "/auth/verify-request",
   },
 });
 
-export const config = { matcher: ["/((?!api|_next|_vercel|assets).*)*"] };
+export const config = {
+  matcher: ["/((?!api|_next|_vercel|assets|auth/verify-request).*)*"],
+};

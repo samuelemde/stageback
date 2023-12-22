@@ -10,9 +10,12 @@ import { Label } from "~/components/ui/label";
 import { useSearchParams } from "next/navigation";
 import { cn } from "~/lib/utils";
 import { AuthError } from "~/lib/error-map";
+import { useState } from "react";
 
-export default function SigninPage({ csrfToken }: { csrfToken: string }) {
+export default function SigninPage() {
   const searchParams = useSearchParams();
+  const [email, setEmail] = useState("");
+
   const callbackUrl = searchParams.get("callbackUrl");
   const error = searchParams.get("error");
 
@@ -74,12 +77,7 @@ export default function SigninPage({ csrfToken }: { csrfToken: string }) {
           <Separator className="w-32" />
         </div>
         <div className="w-full">
-          <form
-            className="space-y-8"
-            method="post"
-            action="/api/auth/signin/email"
-          >
-            <Input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+          <div className="space-y-8">
             <Label>
               Email address
               <Input
@@ -88,12 +86,16 @@ export default function SigninPage({ csrfToken }: { csrfToken: string }) {
                 id="email"
                 name="email"
                 placeholder="email@example.com"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </Label>
-            <Button type="submit" className="w-full py-6">
+            <Button
+              onClick={() => signIn("email", { ...options, email: email })}
+              className="w-full py-6"
+            >
               Continue
             </Button>
-          </form>
+          </div>
         </div>
       </div>
     </>
