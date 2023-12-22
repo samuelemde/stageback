@@ -1,6 +1,7 @@
 import "~/styles/globals.css";
 
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistSans } from "geist/font/sans";
 import { cookies } from "next/headers";
 import { TRPCReactProvider } from "~/trpc/react";
@@ -29,6 +30,7 @@ export default function RootLayout({
             <NextSSRPlugin routerConfig={extractRouterConfig(fileRouter)} />
             {children}
             <Analytics />
+            <SpeedInsights />
             <AudioPlayer />
           </NextAuthProvider>
         </TRPCReactProvider>
