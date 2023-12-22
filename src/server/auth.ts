@@ -47,9 +47,6 @@ export const authOptions: NextAuthOptions = {
         },
       };
     },
-    redirect: async ({ baseUrl }) => {
-      return `${baseUrl}/teams`;
-    },
   },
   adapter: PrismaAdapter(db),
   providers: [

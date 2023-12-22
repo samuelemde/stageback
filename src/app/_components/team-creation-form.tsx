@@ -16,6 +16,8 @@ import { Input } from "~/components/ui/input";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { ImSpinner2 } from "react-icons/im";
+import * as React from "react";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -27,7 +29,7 @@ export function TeamCreationForm() {
   const { update } = useSession();
   const router = useRouter();
 
-  const { mutate } = api.team.create.useMutation({
+  const { mutate, isIdle } = api.team.create.useMutation({
     onSuccess: () => {
       void update().then(() => void router.push("/"));
     },
@@ -45,10 +47,13 @@ export function TeamCreationForm() {
   }
 
   return (
-    <div className="flex flex-col gap-10 p-8">
+    <>
       <h1 className="text-3xl font-bold">Create your team</h1>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full space-y-10"
+        >
           <FormField
             control={form.control}
             name="name"
@@ -56,14 +61,20 @@ export function TeamCreationForm() {
               <FormItem>
                 <FormLabel>Team name</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input className="mt-2 h-12" {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
-          <Button type="submit">Create</Button>
+          <Button type="submit" className="w-full py-6">
+            {isIdle ? (
+              "Create"
+            ) : (
+              <ImSpinner2 className="h-10 w-10 animate-spin p-1" />
+            )}
+          </Button>
         </form>
       </Form>
-    </div>
+    </>
   );
 }

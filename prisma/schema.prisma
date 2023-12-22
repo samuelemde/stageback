@@ -26,33 +26,48 @@ datasource db {
 }
 
 model Team {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          String       @id @default(cuid())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   name        String
-  members     User[]   @relation("TeamMembers")
+  members     User[]       @relation("TeamMembers")
   songs       Song[]
-  createdBy   User     @relation("Creator", fields: [createdById], references: [id])
+  createdBy   User         @relation("Creator", fields: [createdById], references: [id])
   createdById String
-  activeUsers User[]   @relation("ActiveTeam")
+  activeUsers User[]       @relation("ActiveTeam")
+  Invitation  Invitation[]
 
   @@index([name])
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  teams         Team[]    @relation("TeamMembers")
-  createdTeams  Team[]    @relation("Creator")
-  Song          Song[]
-  Image         Image[]
-  activeTeam    Team?     @relation("ActiveTeam", fields: [activeTeamId], references: [id])
-  activeTeamId  String?
+  id                  String       @id @default(cuid())
+  name                String?
+  email               String       @unique
+  emailVerified       DateTime?
+  image               String?
+  accounts            Account[]
+  sessions            Session[]
+  teams               Team[]       @relation("TeamMembers")
+  createdTeams        Team[]       @relation("Creator")
+  Song                Song[]
+  Image               Image[]
+  activeTeam          Team?        @relation("ActiveTeam", fields: [activeTeamId], references: [id])
+  activeTeamId        String?
+  invitationsSent     Invitation[] @relation("InvitedBy")
+  invitationsRedeemed Invitation[] @relation("RedeemedBy")
+}
+
+model Invitation {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  team         Team     @relation(fields: [teamId], references: [id])
+  teamId       String
+  redeemedBy   User?    @relation("RedeemedBy", fields: [redeemedById], references: [id])
+  redeemedById String?
+  invitedBy    User     @relation("InvitedBy", fields: [invitedById], references: [id])
+  invitedById  String
 }
 
 model Song {
