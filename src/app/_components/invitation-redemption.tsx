@@ -5,6 +5,8 @@ import { Button } from "~/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { api } from "~/trpc/react";
 import { useSession } from "next-auth/react";
+import { ImSpinner2 } from "react-icons/im";
+import * as React from "react";
 
 export default function InvitationRedemption({
   invitation,
@@ -16,11 +18,12 @@ export default function InvitationRedemption({
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
-  const { mutate: redeemInvitation } = api.invitation.redeem.useMutation({
-    onSuccess: () => {
-      void update().then(() => void router.push(callbackUrl ?? "/"));
-    },
-  });
+  const { mutate: redeemInvitation, isIdle } =
+    api.invitation.redeem.useMutation({
+      onSuccess: () => {
+        void update().then(() => void router.push(callbackUrl ?? "/"));
+      },
+    });
 
   return (
     <>
@@ -34,7 +37,11 @@ export default function InvitationRedemption({
         className="w-full py-6"
         onClick={() => redeemInvitation(invitation.id)}
       >
-        Join {invitation.team.name}
+        {isIdle ? (
+          <div>Join {invitation.team.name}</div>
+        ) : (
+          <ImSpinner2 className="h-10 w-10 animate-spin p-1" />
+        )}
       </Button>
     </>
   );
