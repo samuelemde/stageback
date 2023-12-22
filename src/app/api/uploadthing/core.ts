@@ -35,10 +35,10 @@ export const fileRouter = {
     }),
 
   audioUploader: f({
-    audio: {
-      maxFileSize: "2GB",
+    "audio/mpeg": {
+      maxFileSize: "512B",
+      maxFileCount: 10,
       contentDisposition: "attachment",
-      maxFileCount: 50,
     },
   })
     .middleware(async () => {
