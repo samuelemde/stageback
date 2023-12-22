@@ -1,8 +1,15 @@
 import { getCsrfToken } from "next-auth/react";
 import SigninPage from "~/app/auth/signin/signin-page";
 import { cookies } from "next/headers";
+import { getServerAuthSession } from "~/server/auth";
+import { redirect } from "next/navigation";
 
 export default async function Page() {
+  const session = await getServerAuthSession();
+  if (session) {
+    redirect("/");
+  }
+
   const csrfToken = await getCsrfToken({
     req: {
       headers: {
