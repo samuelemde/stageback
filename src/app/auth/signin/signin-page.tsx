@@ -13,21 +13,27 @@ import { AuthError } from "~/lib/error-map";
 
 export default function SigninPage({ csrfToken }: { csrfToken: string }) {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? undefined;
-  const error = searchParams.get("error") ?? undefined;
-  const token = searchParams.get("token") ?? undefined;
+  const callbackUrl = searchParams.get("callbackUrl");
+  const error = searchParams.get("error");
+
+  // Default redirect
   let redirect = "/teams";
 
-  if (token) {
-    redirect = `/invitation?token=${token}`;
-  }
-
+  const params = new URLSearchParams();
   if (callbackUrl) {
-    const separator = redirect.includes("?") ? "&" : "?";
-    redirect += `${separator}callbackUrl=${callbackUrl}`;
+    params.set("callbackUrl", callbackUrl);
+    const callbackParams = new URLSearchParams(callbackUrl.split("?")[1]);
+    const token = callbackParams.get("token");
+    if (token) {
+      params.set("token", token);
+      redirect = "/invitation";
+    }
   }
 
-  const options: SignInOptions = { redirect: true, callbackUrl: redirect };
+  const options: SignInOptions = {
+    redirect: true,
+    callbackUrl: `${redirect}?${params.toString()}`,
+  };
 
   return (
     <>

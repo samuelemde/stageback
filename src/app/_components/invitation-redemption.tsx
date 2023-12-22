@@ -2,7 +2,7 @@
 
 import { type RouterOutputs } from "~/trpc/shared";
 import { Button } from "~/components/ui/button";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 import { useSession } from "next-auth/react";
 import { ImSpinner2 } from "react-icons/im";
@@ -15,13 +15,11 @@ export default function InvitationRedemption({
 }) {
   const router = useRouter();
   const { update } = useSession();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
 
   const { mutate: redeemInvitation, isIdle } =
     api.invitation.redeem.useMutation({
       onSuccess: () => {
-        void update().then(() => void router.push(callbackUrl ?? "/"));
+        void update().then(() => void router.push("/"));
       },
     });
 
