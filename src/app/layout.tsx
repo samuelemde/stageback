@@ -1,15 +1,9 @@
 import "~/styles/globals.css";
-
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistSans } from "geist/font/sans";
 import { cookies } from "next/headers";
 import { TRPCReactProvider } from "~/trpc/react";
-import AudioPlayer from "~/components/audio-player";
 import NextAuthProvider from "~/app/_providers/auth-provider";
-import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
-import { extractRouterConfig } from "uploadthing/server";
-import { fileRouter } from "~/app/api/uploadthing/core";
+import { type ReactNode } from "react";
 
 export const metadata = {
   title: "StageBack",
@@ -17,22 +11,12 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable}`}>
         <TRPCReactProvider cookies={cookies().toString()}>
-          <NextAuthProvider>
-            <NextSSRPlugin routerConfig={extractRouterConfig(fileRouter)} />
-            {children}
-            <Analytics />
-            <SpeedInsights />
-            <AudioPlayer />
-          </NextAuthProvider>
+          <NextAuthProvider>{children}</NextAuthProvider>
         </TRPCReactProvider>
       </body>
     </html>

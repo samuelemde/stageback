@@ -13,7 +13,12 @@ import { HiPause, HiPlay } from "react-icons/hi2";
 import SongActions from "~/components/song-actions";
 import IndexPlayButton from "~/components/index-play-button";
 import SongTitle from "~/components/song-title";
-import VersionConnector from "~/components/version-connecter";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+
+const VersionConnector = dynamic(
+  () => import("~/components/version-connector"),
+);
 
 const columns: ColumnDef<SongWithRelations>[] = [
   {
@@ -93,8 +98,10 @@ export default function SongDetails({ initialSong, id }: SongDetailsProps) {
           </Button>
         </div>
       </div>
-      <SongList songs={song.versions} columns={columns} />
-      <VersionConnector />
+      <Suspense>
+        <SongList songs={song.versions} columns={columns} />
+        <VersionConnector />
+      </Suspense>
     </div>
   );
 }

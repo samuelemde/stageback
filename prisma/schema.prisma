@@ -4,11 +4,11 @@
 generator zod {
   provider                  = "zod-prisma-types"
   useTypeAssertions         = true
-  createRelationValuesTypes = true
+  createRelationValuesTypes = false
   addIncludeType            = false
   addSelectType             = false
-  // validateWhereUniqueInput  = true
-  // writeNullishInModelTypes  = true
+  validateWhereUniqueInput  = false
+  writeNullishInModelTypes  = false
 }
 
 generator client {

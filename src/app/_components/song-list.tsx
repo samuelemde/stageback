@@ -4,9 +4,9 @@ import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
-  useReactTable,
-  type SortingState,
   getSortedRowModel,
+  type SortingState,
+  useReactTable,
 } from "@tanstack/react-table";
 import {
   Table,

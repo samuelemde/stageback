@@ -1,6 +1,5 @@
 import { api } from "~/trpc/server";
 import { SongsPage } from "~/app/(library)/songs/songs-page";
-import PageWithAuth from "~/components/page-with-auth";
 
 export default async function Page() {
   const [all, mains] = await Promise.all([
@@ -8,9 +7,5 @@ export default async function Page() {
     api.song.getMainVersions.query(),
   ]);
 
-  return (
-    <PageWithAuth>
-      <SongsPage allSongs={all} mainVersions={mains} />
-    </PageWithAuth>
-  );
+  return <SongsPage allSongs={all} mainVersions={mains} />;
 }

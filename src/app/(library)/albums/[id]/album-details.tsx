@@ -4,8 +4,7 @@ import { api } from "~/trpc/react";
 import ImageWithFallback from "~/components/image-with-fallback";
 import { Button } from "~/components/ui/button";
 import { HiPlay } from "react-icons/hi2";
-import SongList from "~/components/song-list";
-import React from "react";
+import React, { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { type RouterOutputs, type SongWithRelations } from "~/trpc/shared";
 import usePlayer from "~/app/_hooks/usePlayer";
@@ -14,7 +13,12 @@ import { formatDuration } from "~/lib/utils";
 import SongActions from "~/components/song-actions";
 import IndexPlayButton from "~/components/index-play-button";
 import SongTitle from "~/components/song-title";
-import VersionConnector from "~/components/version-connecter";
+import dynamic from "next/dynamic";
+import SongList from "~/components/song-list";
+
+const VersionConnector = dynamic(
+  () => import("~/components/version-connector"),
+);
 
 const columns: ColumnDef<SongWithRelations>[] = [
   {
@@ -97,7 +101,9 @@ export default function AlbumDetails({
         </div>
       </div>
       {!!songs.length && <SongList songs={songs} columns={columns} />}
-      <VersionConnector />
+      <Suspense>
+        <VersionConnector />
+      </Suspense>
     </div>
   );
 }

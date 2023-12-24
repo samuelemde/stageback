@@ -14,7 +14,8 @@ export default function AlbumCard({ album }: { album: Album }) {
           alt="artwork"
           className="object-cover object-center"
           fill
-          loading="eager"
+          loading="lazy"
+          sizes={"(min-width: 1024px) 25vw, 50vw"}
         />
       </div>
       <div>

@@ -1,12 +1,16 @@
 "use client";
 
-import React from "react";
 import { api } from "~/trpc/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import SongList from "~/components/song-list";
 import { type SongWithRelations } from "~/trpc/shared";
 import { defaultSongColumns } from "~/lib/default-song-columns";
-import VersionConnector from "~/components/version-connecter";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+
+const VersionConnector = dynamic(
+  () => import("~/components/version-connector"),
+);
+const SongList = dynamic(() => import("~/components/song-list"));
 
 type DataTableProps = {
   mainVersions: SongWithRelations[];
@@ -29,13 +33,19 @@ export function SongsPage({ allSongs, mainVersions }: DataTableProps) {
           <TabsTrigger value="all">All versions</TabsTrigger>
         </TabsList>
         <TabsContent value="main">
-          <SongList songs={mains} columns={defaultSongColumns} />
+          <Suspense>
+            <SongList songs={mains} columns={defaultSongColumns} />
+          </Suspense>
         </TabsContent>
         <TabsContent value="all">
-          <SongList songs={all} columns={defaultSongColumns} />
+          <Suspense>
+            <SongList songs={all} columns={defaultSongColumns} />
+          </Suspense>
         </TabsContent>
       </Tabs>
-      <VersionConnector />
+      <Suspense>
+        <VersionConnector />
+      </Suspense>
     </div>
   );
 }

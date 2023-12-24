@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { motion, useAnimation } from "framer-motion";
+import { m, useAnimation } from "framer-motion";
 import { Skeleton } from "~/components/ui/skeleton";
 
 type TitleScrollerProps = {
@@ -47,12 +47,12 @@ export default function TitleScroller({ title }: TitleScrollerProps) {
 
   return (
     <div className="overflow-hidden whitespace-nowrap" ref={titleRef}>
-      <motion.div
+      <m.div
         animate={controls}
-        className="text-accent-foreground text-sm font-bold"
+        className="text-sm font-bold text-accent-foreground"
       >
         {title}
-      </motion.div>
+      </m.div>
     </div>
   );
 }

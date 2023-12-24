@@ -2,7 +2,6 @@ import { api } from "~/trpc/server";
 import React from "react";
 import { notFound } from "next/navigation";
 import AlbumDetails from "~/app/(library)/albums/[id]/album-details";
-import PageWithAuth from "~/components/page-with-auth";
 
 export default async function AlbumPage({
   params,
@@ -17,8 +16,6 @@ export default async function AlbumPage({
   if (!album) notFound();
 
   return (
-    <PageWithAuth>
-      <AlbumDetails id={params.id} initialAlbum={album} initialSongs={songs} />
-    </PageWithAuth>
+    <AlbumDetails id={params.id} initialAlbum={album} initialSongs={songs} />
   );
 }
