@@ -5,7 +5,7 @@ export default async function Page() {
   const albums = await api.album.getAll.query();
 
   return (
-    <div className="lg:grid-cols- grid w-full grid-cols-2 gap-x-4 gap-y-6 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-8">
+    <div className="grid w-full grid-cols-2 gap-x-4 gap-y-6 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-8">
       {albums.map((album) => (
         <AlbumCard key={album.id} album={album} />
       ))}
